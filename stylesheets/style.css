@@ -1,0 +1,17 @@
+* {
+   box-sizing: border-box;
+   margin: 0;
+   padding: 0;
+}
+#canvasHolder{
+   display: flex;
+   flex-direction: column;
+   height: 100vh;
+   justify-content: center;
+   align-items: center;
+}
+#gameCanvas {
+   display: block;
+   /*margin: 0 auto;*/
+   border: 2px solid black;
+}
