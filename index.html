@@ -1,17 +1,89 @@
 <!DOCTYPE html>
-
-<html>
+<html lang="en">
    <head>
-      <title>Welcome to the Ludo Game</title>
+      <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <link rel="stylesheet" type="text/CSS" href="stylesheets/style.css" />
+
+      <title>Welcome to the Ludo Game</title>
+      <link rel="stylesheet" type="text/CSS" href="stylesheets/game.css" />
+      <link rel="icon" type="image/icon" href="img/logo.jpg" />
+      <script
+         src="https://kit.fontawesome.com/843e13ba28.js"
+         crossorigin="anonymous"
+      ></script>
    </head>
    <body>
-      <div id="canvasHolder">
-         <h1>The Ludo Game
-         <button onclick="rollDie();">Roll the Die!</button></h1>
-         <canvas id="gameCanvas"> </canvas>
+      <div id="welcome" class="modal">
+         <img src="img/logo.jpg" class="logo" />
+         <h1>Ludo Game</h1>
+         <div class="selection">
+            <label for="numPlayers">Number of Players:</label><br />
+            <button class="iconBtn"><i class="fas fa-plus"></i></button>
+            <input type="number" value="4" id="numPlayers" /><i
+               class="fas fa-user"
+            ></i>
+            <button class="iconBtn"><i class="fas fa-minus"></i></button>
+         </div>
+         <button id="goNext" class="appBtn">Go Next</button>
       </div>
-      <script src="scripts/game.js"></script>
+      
+      <div id="selectorColor" class="modal">
+         <img src="img/logo.jpg" class="logo" />
+         <h2>Select Colors</h2>
+         <label>Player 1</label>
+         <input type="text" class="name" value="Player1"/>
+         <select id="player1" name="cars">
+            <option value="red">Red</option>
+            <option value="green">Green</option>
+            <option value="yellow">Yellow</option>
+            <option value="blue">Blue</option>
+         </select>
+         <label>Player 2</label>
+         <input type="text" class="name" value="Player2" />
+         <select id="player2" name="player2">
+            <option value="green">Green</option>
+            <option value="red">Red</option>
+            <option value="yellow">Yellow</option>
+            <option value="blue">Blue</option>
+         </select>
+         <label>Player 3</label>
+         <input type="text" class="name"  value="Player3"/>
+         <select id="player3" name="player3">
+            <option value="yellow">Yellow</option>
+            <option value="red">Red</option>
+            <option value="green">Green</option>
+            <option value="blue">Blue</option>
+         </select>
+         <label>Player 4</label>
+         <input type="text" class="name"  value="Player4"/>
+         <select id="player4" name="player4">
+            <option value="blue">Blue</option>
+            <option value="red">Red</option>
+            <option value="green">Green</option>
+            <option value="yellow">Yellow</option>
+         </select>
+
+         <button id="startGame" class="appBtn">Start Game</button>
+      </div>
+
+      <div class="flex flex-col jccent aicent mainBox">
+         <h1>Ludo Game</h1>
+         <input type="checkbox" value="roll" name="rolloin" id="rollorin" />Roll
+         <input type="number" id="inValue" value="6" />
+         <br />Number of players:
+         <input type="number" id="numPlayers" value="4" />
+         <button id="header">Click me to roll the die.</button>
+         <div id="canvasHolder">
+            <canvas id="gameCanvas"></canvas>
+         </div>
+         <div class="numbers"></div>
+         <div class="numbers"></div>
+         <div class="numbers"></div>
+         <div class="numbers"></div>
+         <div class="numbers"></div>
+         <div class="numbers"></div>
+      </div>
+
+      <script src="scripts/index.js"></script>
    </body>
 </html>

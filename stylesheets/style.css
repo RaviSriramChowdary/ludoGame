@@ -15,3 +15,19 @@
    /*margin: 0 auto;*/
    border: 2px solid black;
 }
+button{
+   display: inline-block;
+   border-radius: 15px;
+   padding: 10px;
+   font-size: 30px;
+   background-color:cyan;
+   border: none;
+   color: black;
+   animation: blink 0.5s infinite;
+}
+
+@keyframes blink{
+   0%{opacity: 0;}
+   50%{opacity:1}
+   100%{opacity: 0;}
+}

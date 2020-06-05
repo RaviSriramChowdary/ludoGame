@@ -1,0 +1,35 @@
+Game Logics, Ideas, Plans and Rules are as follows:
+
+//We are going to do the canvas implementation fo the game instead of the absolute positioning procedure of the game.
+
+
+In this game there will be changeble number of players from 2 to 4.
+Any player can leave the game when its their turn. 
+Die will not roll when there is a possible move for the respective player and he didnt' make any one of such of them also while when the die is alredy moving.
+Also the rolling 6 or killing an opponent or alos by sending th token to its own win position leads to an extra turn.
+We would make some fixed colors arrangemrnt.
+Players will be asked to choose the colors.
+There will be a single die for both of them which will be at center.
+Alos there will be no doubling/ tripling of coins.
+There will be some means by which we will find for a certain die throw will a move exists or not.
+Each player would have their own id/key/name.
+We will also track the game by means of some variables:
+   1. has the player rolled
+   2. has the player moved
+   3. has the player killed some one's tokens
+   4. has the player gone to finish
+   5. how many tokens are left
+   6. how many tokens are in the locker positioning
+   7. whose turn is now
+   8. score of each player and score will not be displayed if the player doent exit at all at that position
+We will also fix the end points by the scalage of the numbers by the required factor.
+We would alos automove if only one token is able to move with the rolled die number.
+We will use the both references:
+   1. Each and every square will have the information of the tokens it have in it's hand.
+   2. Each and every plyer tokens will alos be tracked from the player side.
+We will also add the autoplay mode so that we can use that in the how to play section.
+We will take the input of the plyers names and will display at their respective token lockers.
+We would also keep a die that rolls on tapping or even by shaking the phone if the phone has orientation sensors.
+We will draw the game board using the array implementation and the direction of the path of the game using bends..
+We would add the sample ludo and the classic ludo game patterns and games.
+And the drawing of the game would be by the setInterval method.

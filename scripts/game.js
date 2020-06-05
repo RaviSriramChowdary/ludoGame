@@ -5,7 +5,6 @@ cvs.height = cvs.width;
 
 let unit = cvs.width / 12;
 let gamePath = new Array();
-
 let numPlay = 2;
 let gamePlay = new Array(numPlay);
 let numTokens = 4;
@@ -15,12 +14,13 @@ let clickX, clickY;
 let gameTurn = "A";
 
 let scoreA = 0,
-   scoreB = 0;
+scoreB = 0;
+let hasKilled = false;
 
 // console.log(gamePlay.length);
 
 /*
-   There are two ways of coding this game:
+There are two ways of coding this game:
    1. Tracing the tokens by their x-values, y-values
    2. Tracing each square on the game Path by the number of and types of tokens present in it.
 */
@@ -28,12 +28,13 @@ let scoreA = 0,
 //first of all going in the first approach
 //creating an object for each player that tracks the following :
 /*
-   each and every of the token and thier x and y positions
-   is it their turn
-   number of tokens in the locker (this later will be calc dyanamically)
+each and every of the token and thier x and y positions
+is it their turn
+number of tokens in the locker (this later will be calc dyanamically)
 */
 
 //Object declaration
+// 
 
 for (let i = 0; i < gamePlay.length; i++) {
    if (i == 0) {
@@ -62,6 +63,7 @@ for (let i = 0; i < gamePlay.length; i++) {
 }
 
 //Funtion to add the next component of the array
+
 const addNext = (x, y, array) => {
    array.push({ x: x, y: y });
 };
@@ -113,11 +115,71 @@ const defineGamePath = () => {
 let dieValue = Math.floor(Math.random() * 6 + 1);
 
 function rollDie() {
+   if (dieValue != 6 && hasKilled == false) changeTurn();
+   hasKilled = false;
    dieValue = Math.floor(Math.random() * 6 + 1);
-   if (dieValue != 6) changeTurn();
+   rollDice();
+   // if (dieValue > 6) {
+   //    dieValue = 13 - dieValue;
+   // }
    hasRolled = true;
 }
+function rollDice() {
+   let dice = document.getElementById("frd");
+   toggleClasses(dice);
+}
+let rollNum;
+let evenorodd;
 
+function toggleClasses(die) {
+   if (document.getElementById("die").classList[0] == "even") evenorodd = 2;
+   else evenorodd = 1;
+
+   document.getElementById("die").classList.toggle("even");
+   document.getElementById("die").classList.toggle("odd");
+
+   die.classList = ["faceRelDiv"];
+   dieValue = getRandomNumber(1, 6);
+   document.getElementById("numHolder").innerHTML = dieValue;
+   if (dieValue == 1) {
+      if (evenorodd == 2)
+         die.setAttribute("class", die.getAttribute("class") + " goto1");
+      else die.setAttribute("class", die.getAttribute("class") + " goto7");
+   }
+   if (dieValue == 2) {
+      if (evenorodd == 2)
+         die.setAttribute("class", die.getAttribute("class") + " goto2");
+      else die.setAttribute("class", die.getAttribute("class") + " goto8");
+   }
+   if (dieValue == 3) {
+      if (evenorodd == 2)
+         die.setAttribute("class", die.getAttribute("class") + " goto3");
+      else die.setAttribute("class", die.getAttribute("class") + " goto9");
+   }
+   if (dieValue == 4) {
+      if (evenorodd == 2)
+         die.setAttribute("class", die.getAttribute("class") + " goto4");
+      else die.setAttribute("class", die.getAttribute("class") + " goto10");
+   }
+   if (dieValue == 5) {
+      if (evenorodd == 2)
+         die.setAttribute("class", die.getAttribute("class") + " goto5");
+      else die.setAttribute("class", die.getAttribute("class") + " goto11");
+   }
+   if (dieValue == 6) {
+      if (evenorodd == 2)
+         die.setAttribute("class", die.getAttribute("class") + " goto6");
+      else die.setAttribute("class", die.getAttribute("class") + " goto12");
+   }
+}
+
+function getRandomNumber(min, max) {
+   min = Math.ceil(min);
+   max = Math.floor(max);
+   return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+document.getElementById("dieHolder").addEventListener("click", rollDie);
 const changeTurn = () => {
    if (gameTurn == "A") gameTurn = "B";
    else if (gameTurn == "B") gameTurn = "A";
@@ -159,6 +221,7 @@ function updateGame() {
                         plots[i + dieValue].numTokenB;
                      plots[i + dieValue].numTokenB = 0;
                      gameTurn = "A";
+                     hasKilled = true;
                   }
                } else scoreA++;
 
@@ -177,19 +240,17 @@ function updateGame() {
                plots[i].numTokenB > 0
             ) {
                plots[i].numTokenB--;
-               if (i + dieValue < 44)
-               { 
+               if (i + dieValue < 44) {
                   plots[i + dieValue].numTokenB++;
-                   if (plots[i + dieValue].numTokenA > 0) {
-                      gamePlay[0].numTokenInLocker +=
-                         plots[i + dieValue].numTokenA;
-                      plots[i + dieValue].numTokenA = 0;
-                      gameTurn = "B";
-                   }
-               }
-                  
-               else scoreB++;
-                 
+                  if (plots[i + dieValue].numTokenA > 0) {
+                     gamePlay[0].numTokenInLocker +=
+                        plots[i + dieValue].numTokenA;
+                     plots[i + dieValue].numTokenA = 0;
+                     gameTurn = "B";
+                     hasKilled = true;
+                  }
+               } else scoreB++;
+
                clickX = -10;
                clickY = -10;
                hasRolled = false;
