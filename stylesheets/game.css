@@ -39,6 +39,7 @@ body {
 #gameCanvas {
    border: 2px solid black;
    z-index: 2;
+   /* border-radius: 3.33%; */
 }
 
 #token {
