@@ -369,14 +369,14 @@ const rand = (min, max) => min + Math.floor(Math.random() * (max - min + 0.7));
 //    false
 // );
 
-// document.getElementById('simpleLudo').addEventListener('click', function () {
-//    document.getElementById("welcome").style.display = "none";
-//    document.getElementById('selectorColor').style.display = "block";
-// })
+document.getElementById('simpleLudo').addEventListener('click', function () {
+    document.getElementById("welcome").style.display = "none";
+   document.getElementById('selectorColor').style.display = "block";
+})
 
-// document.getElementById("startGame").addEventListener("click", function () {
-//    document.getElementById("selectorColor").style.display = "none";
-// });
+document.getElementById("startGame").addEventListener("click", function () {
+  document.getElementById("selectorColor").style.display = "none";
+});
 
 let hasalreadySwitched = false;
 
