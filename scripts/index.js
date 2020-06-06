@@ -17,9 +17,9 @@ hasHomed = false;
 let whoseTurn = 0;
 let dieValue = 0;
 
-let numPlayers = 4;
+let numPlayers = 2;
 let gameOrder = new Array(numPlayers);
-gameOrder = [1, 2, 3, 4];
+gameOrder = [1, 3];
 let numTokens = 4;
 
 let numSquares = 15;
