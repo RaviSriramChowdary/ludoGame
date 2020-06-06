@@ -59,21 +59,33 @@ document.getElementById("dieHolder").addEventListener(
       if (whoseTurn != 0) isThereAMove();
       if (canRoll) {
          rollDie();
+         if (!canMove) {
+            setTimeout(function () {
+               switchPlayer();
+               drawToCvs();
+            }, 3200);
+            canRoll = true;
+         }  
          document.getElementById("coverForDie").style.display = "block";
          rollNum = dieValue;
          toggleClasses(dice);
          setTimeout(function () {
             document.getElementById("coverForDie").style.display = "none";
-         },3000);
+         }, 2200);
       } else {
          if (!canMove) {
-         rollDie();
-         document.getElementById("coverForDie").style.display = "block";
-         rollNum = dieValue;
-         toggleClasses(dice);
-         setTimeout(function () {
-            document.getElementById("coverForDie").style.display = "none";
-         },3000);
+            rollDie();
+            setTimeout(function () {
+               switchPlayer();
+               drawToCvs();
+            }, 3200);
+            document.getElementById("coverForDie").style.display = "block";
+            rollNum = dieValue;
+            toggleClasses(dice);
+            setTimeout(function () {
+               document.getElementById("coverForDie").style.display = "none";
+            }, 2200);
+            canRoll = true;
          }
       }
    },

@@ -17,9 +17,9 @@ hasHomed = false;
 let whoseTurn = 0;
 let dieValue = 0;
 
-let numPlayers = 2;
+let numPlayers = 3;
 let gameOrder = new Array(numPlayers);
-gameOrder = [1, 3];
+gameOrder = [1,  3,4 ];
 let numTokens = 4;
 
 let numSquares = 15;
@@ -282,8 +282,12 @@ const drawToCvs = () => {
    //    (numSquares * unit) / 2 - unit
    // );
 
-   for (let k = 1; k <= numPlayers; k++) {
-      ctx.fillText("Score: " + score[k], lockers[k].x + 30, lockers[k].y + 30);
+   for (let k = 0; k < numPlayers; k++) {
+      ctx.fillText(
+         "Score: " + score[[gameOrder[k]]],
+         lockers[[gameOrder[k]]].x + 30,
+         lockers[[gameOrder[k]]].y + 30
+      );
    }
 };
 
@@ -310,10 +314,22 @@ function drawToken(x, y, color, factor) {
 
 const defineGamePlay = () => {
    for (let i = 1; i <= 4; i++) {
-      gamePlay[i] = {
-         numTokenInLocker: numTokens,
-         tokensPositions: [-1, -1, -1, -1],
-      };
+      let counter = 0;
+      gameOrder.forEach((value, index) => {
+         if (i == value) {
+            counter++;
+         }
+      })
+      if(counter > 0)
+         gamePlay[i] = {
+            numTokenInLocker: numTokens,
+            tokensPositions: [-1, -1, -1, -1],
+         };
+      else
+         gamePlay[i] = {
+            numTokenInLocker: 0,
+            tokensPositions: [-1, -1, -1, -1],
+         };
    }
 };
 
@@ -369,21 +385,21 @@ const rand = (min, max) => min + Math.floor(Math.random() * (max - min + 0.7));
 //    false
 // );
 
-document.getElementById('simpleLudo').addEventListener('click', function () {
-    document.getElementById("welcome").style.display = "none";
-   document.getElementById('selectorColor').style.display = "block";
-})
+// document.getElementById('goNext').addEventListener('click', function () {
+//    document.getElementById("welcome").style.display = "none";
+//    document.getElementById('selectorColor').style.display = "block";
+// })
 
-document.getElementById("startGame").addEventListener("click", function () {
-  document.getElementById("selectorColor").style.display = "none";
-});
+// document.getElementById("startGame").addEventListener("click", function () {
+//    document.getElementById("selectorColor").style.display = "none";
+// });
 
 let hasalreadySwitched = false;
 
 function rollDie() {
-   if (dieValue != 6 && !hasKilled && !hasHomed && !hasalreadySwitched) {
-      switchPlayer();
-   }
+   // if (dieValue != 6 && !hasKilled && !hasHomed && !hasalreadySwitched) {
+   //    switchPlayer();
+   // }
    hasalreadySwitched = false;
    canRoll = false;
    hasMoved = false;
@@ -394,6 +410,7 @@ function rollDie() {
 }
 
 function switchPlayer() {
+   console.log("Switching: Initial Player : " + whoseTurn);
    if (whoseTurn == 0) {
       whoseTurn = gameOrder[0];
    } else
@@ -408,6 +425,7 @@ function switchPlayer() {
             }
          }
       }
+   console.log("Switching Completed: Final Player : " + whoseTurn);
 }
 
 function updateGame() {
@@ -461,7 +479,7 @@ function updateGame() {
 
          let counter = 0;
 
-         for (let m = 1; m <= numPlayers; m++) {
+         for (let m = 1; m <= 4; m++) {
             if (
                m != whoseTurn &&
                pathSquares[temp + dieValue].numTokensPlayer[m] > 0
@@ -493,13 +511,14 @@ function updateGame() {
          pathSquares[i].numTokensPlayer[whoseTurn]--;
          hasMoved = true;
          canRoll = true;
+         isThereAMove();
          if (
-            (hasMoved ||
+            ((hasMoved ||
             !canMove) &&
             !hasKilled &&
             !hasHomed &&
             dieValue != 6 &&
-            !hasalreadySwitched
+            !hasalreadySwitched) || !canMove
          ) {
             switchPlayer();
             hasalreadySwitched = true;
@@ -507,10 +526,24 @@ function updateGame() {
       }
    }
 
+   if (score[whoseTurn] == 4) {
+      winOrder.push(whoseTurn);
+      let place;
+      gameOrder.forEach((value, index) => {
+         if (value == whoseTurn) {
+            place = index;
+         }
+      })
+      gameOrder.splice(place, 1);
+      numPlayers--;
+   }
+
    //drawing the changes to the canvas
    trackTokens();
    drawToCvs();
 }
+
+let winOrder = [];
 
 function isThereAMove() {
    canMove = true;
