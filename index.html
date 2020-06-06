@@ -70,108 +70,112 @@
       </div>
    -->
 
-      <div class=" jccent aicent mainBox">
+      <div class="jccent aicent mainBox">
          <h1>Ludo Game</h1>
-         <input type="checkbox" value="roll" name="rolloin" id="rollorin" checked/>Roll
+         <input
+            type="checkbox"
+            value="roll"
+            name="rolloin"
+            id="rollorin"
+            checked
+         />Roll
          <input type="number" id="inValue" value="6" />
          <button id="header">Click me to roll the die.</button>
          <div id="canvasHolder">
             <canvas id="gameCanvas"></canvas>
-         </div>
-      </div>
-      <!--
 
-         <div id="numHolder"></div>
-         <div id="flexContforDie">
-         <div id="dieHolder">
-            <div class="even" id="die">
-               <div class="faceRelDiv" id="frd">
-                  <div class="face" id="face-1">
-                     <div class="dotRelDiv">
-                        <div class="dots-1 dots"></div>
-                        <div class="dots-2 dots"></div>
-                        <div class="dots-3 dots"></div>
-                        <div class="dots-4 dots"></div>
-                        <div class="dots-5 dots"></div>
-                        <div class="dots-6 dots"></div>
-                        <div class="dots-7 dots"></div>
-                        <div class="dots-8 dots"></div>
-                        <div class="dots-9 dots"></div>
-                     </div>
-                  </div>
-                  <div class="face" id="face-2">
-                     <div class="dotRelDiv">
-                        <div class="dots-1 dots"></div>
-                        <div class="dots-2 dots"></div>
-                        <div class="dots-3 dots"></div>
-                        <div class="dots-4 dots"></div>
-                        <div class="dots-5 dots"></div>
-                        <div class="dots-6 dots"></div>
-                        <div class="dots-7 dots"></div>
-                        <div class="dots-8 dots"></div>
-                        <div class="dots-9 dots"></div>
-                     </div>
-                  </div>
-                  <div class="face" id="face-3">
-                     <div class="dotRelDiv">
-                        <div class="dots-1 dots"></div>
-                        <div class="dots-2 dots"></div>
-                        <div class="dots-3 dots"></div>
-                        <div class="dots-4 dots"></div>
-                        <div class="dots-5 dots"></div>
-                        <div class="dots-6 dots"></div>
-                        <div class="dots-7 dots"></div>
-                        <div class="dots-8 dots"></div>
-                        <div class="dots-9 dots"></div>
-                     </div>
-                  </div>
-                  <div class="face" id="face-4">
-                     <div class="dotRelDiv">
-                        <div class="dots-1 dots"></div>
-                        <div class="dots-2 dots"></div>
-                        <div class="dots-3 dots"></div>
-                        <div class="dots-4 dots"></div>
-                        <div class="dots-5 dots"></div>
-                        <div class="dots-6 dots"></div>
-                        <div class="dots-7 dots"></div>
-                        <div class="dots-8 dots"></div>
-                        <div class="dots-9 dots"></div>
-                     </div>
-                  </div>
-                  <div class="face" id="face-5">
-                     <div class="dotRelDiv">
-                        <div class="dots-1 dots"></div>
-                        <div class="dots-2 dots"></div>
-                        <div class="dots-3 dots"></div>
-                        <div class="dots-4 dots"></div>
-                        <div class="dots-5 dots"></div>
-                        <div class="dots-6 dots"></div>
-                        <div class="dots-7 dots"></div>
-                        <div class="dots-8 dots"></div>
-                        <div class="dots-9 dots"></div>
-                     </div>
-                  </div>
-                  <div class="face" id="face-6">
-                     <div class="dotRelDiv">
-                        <div class="dots-1 dots"></div>
-                        <div class="dots-2 dots"></div>
-                        <div class="dots-3 dots"></div>
-                        <div class="dots-4 dots"></div>
-                        <div class="dots-5 dots"></div>
-                        <div class="dots-6 dots"></div>
-                        <div class="dots-7 dots"></div>
-                        <div class="dots-8 dots"></div>
-                        <div class="dots-9 dots"></div>
+            <div id="coverForDie"></div>
+            
+            <div id="flexContforDie">
+               <div id="dieHolder">
+                  <div class="even" id="die">
+                     <div class="faceRelDiv" id="frd">
+                        <div class="face" id="face-1">
+                           <div class="dotRelDiv">
+                              <div class="dots-1 dots"></div>
+                              <div class="dots-2 dots"></div>
+                              <div class="dots-3 dots"></div>
+                              <div class="dots-4 dots"></div>
+                              <div class="dots-5 dots"></div>
+                              <div class="dots-6 dots"></div>
+                              <div class="dots-7 dots"></div>
+                              <div class="dots-8 dots"></div>
+                              <div class="dots-9 dots"></div>
+                           </div>
+                        </div>
+                        <div class="face" id="face-2">
+                           <div class="dotRelDiv">
+                              <div class="dots-1 dots"></div>
+                              <div class="dots-2 dots"></div>
+                              <div class="dots-3 dots"></div>
+                              <div class="dots-4 dots"></div>
+                              <div class="dots-5 dots"></div>
+                              <div class="dots-6 dots"></div>
+                              <div class="dots-7 dots"></div>
+                              <div class="dots-8 dots"></div>
+                              <div class="dots-9 dots"></div>
+                           </div>
+                        </div>
+                        <div class="face" id="face-3">
+                           <div class="dotRelDiv">
+                              <div class="dots-1 dots"></div>
+                              <div class="dots-2 dots"></div>
+                              <div class="dots-3 dots"></div>
+                              <div class="dots-4 dots"></div>
+                              <div class="dots-5 dots"></div>
+                              <div class="dots-6 dots"></div>
+                              <div class="dots-7 dots"></div>
+                              <div class="dots-8 dots"></div>
+                              <div class="dots-9 dots"></div>
+                           </div>
+                        </div>
+                        <div class="face" id="face-4">
+                           <div class="dotRelDiv">
+                              <div class="dots-1 dots"></div>
+                              <div class="dots-2 dots"></div>
+                              <div class="dots-3 dots"></div>
+                              <div class="dots-4 dots"></div>
+                              <div class="dots-5 dots"></div>
+                              <div class="dots-6 dots"></div>
+                              <div class="dots-7 dots"></div>
+                              <div class="dots-8 dots"></div>
+                              <div class="dots-9 dots"></div>
+                           </div>
+                        </div>
+                        <div class="face" id="face-5">
+                           <div class="dotRelDiv">
+                              <div class="dots-1 dots"></div>
+                              <div class="dots-2 dots"></div>
+                              <div class="dots-3 dots"></div>
+                              <div class="dots-4 dots"></div>
+                              <div class="dots-5 dots"></div>
+                              <div class="dots-6 dots"></div>
+                              <div class="dots-7 dots"></div>
+                              <div class="dots-8 dots"></div>
+                              <div class="dots-9 dots"></div>
+                           </div>
+                        </div>
+                        <div class="face" id="face-6">
+                           <div class="dotRelDiv">
+                              <div class="dots-1 dots"></div>
+                              <div class="dots-2 dots"></div>
+                              <div class="dots-3 dots"></div>
+                              <div class="dots-4 dots"></div>
+                              <div class="dots-5 dots"></div>
+                              <div class="dots-6 dots"></div>
+                              <div class="dots-7 dots"></div>
+                              <div class="dots-8 dots"></div>
+                              <div class="dots-9 dots"></div>
+                           </div>
+                        </div>
                      </div>
                   </div>
                </div>
             </div>
          </div>
       </div>
-   -->
-      
+
       <script src="scripts/index.js"></script>
       <script src="scripts/die.js"></script>
    </body>
-   </html>
-   
+</html>

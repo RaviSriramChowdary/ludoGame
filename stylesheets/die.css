@@ -4,30 +4,33 @@
    margin: 0;
 }
 
-#numHolder{
-   background-color: rgb(77, 28, 110);
-   height: 100px;
-   color: aliceblue;
-   line-height: 100px;
+#flexContforDie,#coverForDie {
+   position: absolute;
+   top: 50%;
+   left: 50%;
+   transform: translate(-50%, -50%) scale(0.5);
 }
 
-#flexContforDie {
-   position: relative;
-   bottom: 700px;
-   display: flex;
-   align-items: center;
-   justify-content: center;
-   height: 100vh;
-   transform: scale(0.5);
+#flexContforDie{
+   z-index: 10;
+}
+
+#coverForDie{
+   z-index: 200;
+   width: 250px;
+   height: 250px;
+   display: none;
 }
 
 #dieHolder {
-   width: 300px;
-   height: 300px;
+   width: 250px;
+   height: 250px;
    margin: 0 auto;
    display: flex;
    align-items: center;
    justify-content: center;
+   border: 2px solid black;
+   background-color: rgb(70, 69, 62);
 }
 
 #die {
@@ -35,61 +38,62 @@
    width: 190px;
 }
 
-.faceRelDiv{
+.faceRelDiv {
    position: relative;
    height: 190px;
    width: 190px;
    transform-style: preserve-3d;
-   transition: transform 1.5s ease-out;
+   transition: transform 2.2s ease-out;
 }
-.goto1{
-  transform: rotateX(360deg) rotateY(720deg) rotateZ(360deg);
+.goto1 {
+   transform: rotateX(360deg) rotateY(720deg) rotateZ(360deg);
 }
-.goto2{
-  transform: rotateX(450deg) rotateY(720deg) rotateZ(360deg);
+.goto2 {
+   transform: rotateX(450deg) rotateY(720deg) rotateZ(360deg);
 }
-.goto3{
-  transform: rotateX(360deg) rotateY(630deg) rotateZ(360deg);
+.goto3 {
+   transform: rotateX(360deg) rotateY(630deg) rotateZ(360deg);
 }
-.goto4{
-  transform: rotateX(360deg) rotateY(810deg) rotateZ(360deg);
+.goto4 {
+   transform: rotateX(360deg) rotateY(810deg) rotateZ(360deg);
 }
-.goto5{
-  transform: rotateX(270deg) rotateY(720deg) rotateZ(360deg);
+.goto5 {
+   transform: rotateX(270deg) rotateY(720deg) rotateZ(360deg);
 }
-.goto6{
-  transform: rotateX(360deg) rotateY(900deg) rotateZ(360deg);
+.goto6 {
+   transform: rotateX(360deg) rotateY(900deg) rotateZ(360deg);
 }
-.goto7{
-  transform: rotateX(-360deg) rotateY(-720deg) rotateZ(-360deg);
+.goto7 {
+   transform: rotateX(-360deg) rotateY(-720deg) rotateZ(-360deg);
 }
-.goto8{
-  transform: rotateX(-270deg) rotateY(-720deg) rotateZ(-360deg);
+.goto8 {
+   transform: rotateX(-270deg) rotateY(-720deg) rotateZ(-360deg);
 }
-.goto9{
-  transform: rotateX(-360deg) rotateY(-810deg) rotateZ(-360deg);
+.goto9 {
+   transform: rotateX(-360deg) rotateY(-810deg) rotateZ(-360deg);
 }
-.goto10{
-  transform: rotateX(-360deg) rotateY(-630deg) rotateZ(-360deg);
+.goto10 {
+   transform: rotateX(-360deg) rotateY(-630deg) rotateZ(-360deg);
 }
-.goto11{
-  transform: rotateX(-450deg) rotateY(-720deg) rotateZ(-360deg);
+.goto11 {
+   transform: rotateX(-450deg) rotateY(-720deg) rotateZ(-360deg);
 }
-.goto12{
-  transform: rotateX(-360deg) rotateY(-900deg) rotateZ(-360deg);
+.goto12 {
+   transform: rotateX(-360deg) rotateY(-900deg) rotateZ(-360deg);
 }
 
 .face {
    height: 190px;
    width: 190px;
    background-color: rgb(255, 255, 255);
+   box-shadow: inset 0 0 20px #000000;
    position: absolute;
-   border: 1px solid black;
+   border-radius: 0px;
    top: 0;
    left: 0;
 }
 
-.dotRelDiv{
+.dotRelDiv {
    position: absolute;
    height: 100%;
    width: 100%;
@@ -159,21 +163,21 @@
    display: block;
 }
 
-#face-1{
-   transform: rotate3d(0,0,0,90deg) translateZ(95px); 
+#face-1 {
+   transform: rotate3d(0, 0, 0, 90deg) translateZ(95px);
 }
-#face-2{
-   transform: rotate3d(-1,0,0,90deg) translateZ(95px); 
+#face-2 {
+   transform: rotate3d(-1, 0, 0, 90deg) translateZ(95px);
 }
-#face-3{
-   transform: rotate3d(0,1,0,90deg) translateZ(95px);   
+#face-3 {
+   transform: rotate3d(0, 1, 0, 90deg) translateZ(95px);
 }
-#face-4{
-   transform: rotate3d(0,-1,0,90deg) translateZ(95px); 
+#face-4 {
+   transform: rotate3d(0, -1, 0, 90deg) translateZ(95px);
 }
-#face-5{
-   transform: rotate3d(1,0,0,90deg) translateZ(95px); 
+#face-5 {
+   transform: rotate3d(1, 0, 0, 90deg) translateZ(95px);
 }
-#face-6{
-   transform: rotate3d(1,0,0,180deg) translateZ(95px);   
+#face-6 {
+   transform: rotate3d(1, 0, 0, 180deg) translateZ(95px);
 }

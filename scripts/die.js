@@ -1,8 +1,9 @@
-function rollDice() {
-   let dice = document.getElementById("frd");
-   toggleClasses(dice);
-}
-let rollNum;
+// function rollDice() {
+//    let dice = document.getElementById("frd");
+//    rollDie();
+//    rollNum = dieValue;
+//    toggleClasses(dice);
+// }
 let evenorodd;
 
 function toggleClasses(die) {
@@ -13,8 +14,6 @@ function toggleClasses(die) {
    document.getElementById("die").classList.toggle("odd");
 
    die.classList = ["faceRelDiv"];
-   rollNum = getRandomNumber(1, 6);
-   document.getElementById("numHolder").innerHTML = rollNum;
    if (rollNum == 1) {
       if (evenorodd == 2)
          die.setAttribute("class", die.getAttribute("class") + " goto1");
@@ -53,4 +52,30 @@ function getRandomNumber(min, max) {
    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-// document.getElementById("dieHolder").addEventListener("click", rollDice);
+document.getElementById("dieHolder").addEventListener(
+   "click",
+   function () {
+      let dice = document.getElementById("frd");
+      if (whoseTurn != 0) isThereAMove();
+      if (canRoll) {
+         rollDie();
+         document.getElementById("coverForDie").style.display = "block";
+         rollNum = dieValue;
+         toggleClasses(dice);
+         setTimeout(function () {
+            document.getElementById("coverForDie").style.display = "none";
+         }, 3000);
+      } else {
+         if (!canMove) {
+            rollDie();
+            document.getElementById("coverForDie").style.display = "block";
+            rollNum = dieValue;
+            toggleClasses(dice);
+            setTimeout(function () {
+               document.getElementById("coverForDie").style.display = "none";
+            }, 3000);
+         }
+      }
+   },
+   false
+);

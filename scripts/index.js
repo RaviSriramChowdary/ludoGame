@@ -6,7 +6,7 @@ cvs.width = 720;
 cvs.height = cvs.width;
 cvsHolder.style.width = cvs.offsetWidth + "px";
 
-let hasRolled, hasMoved, canRoll, hasKilled, hasHomed;
+let hasRolled, hasMoved, canRoll, hasKilled, hasHomed, canMove;
 
 hasRolled = false;
 hasMoved = false;
@@ -18,6 +18,8 @@ let whoseTurn = 0;
 let dieValue = 0;
 
 let numPlayers = 4;
+let gameOrder = new Array(numPlayers);
+gameOrder = [1, 2, 3, 4];
 let numTokens = 4;
 
 let numSquares = 15;
@@ -111,9 +113,13 @@ const drawToCvs = () => {
    for (let i = 0; i < pathLength; i++) {
       ctx.fillStyle = "white";
       if (i == 0) ctx.fillStyle = "#DC1924";
+      if (i == 4 * numSquares - 5) ctx.fillStyle = "#FCA9A9";
       if (i == numSquares - 1) ctx.fillStyle = "#2AA44A";
+      if (i == numSquares - 2) ctx.fillStyle = "#77D18D";
       if (i == 2 * numSquares - 2) ctx.fillStyle = "#FFDE16";
+      if (i == 2 * numSquares - 3) ctx.fillStyle = "#f2e28a";
       if (i == 3 * numSquares - 3) ctx.fillStyle = "#0EABDE";
+      if (i == 3 * numSquares - 4) ctx.fillStyle = "#9fe4f9";
       ctx.fillRect(gamePath[i].x, gamePath[i].y, unit, unit);
 
       ctx.strokeStyle = "#00000010";
@@ -156,7 +162,7 @@ const drawToCvs = () => {
    }
    lockWidth = cvs.width / 2 - 2 * unit;
    ctx.strokeStyle = "black";
-   for (let i = 1; i <= numPlayers; i++) {
+   for (let i = 1; i <= 4; i++) {
       switch (i) {
          case 1:
             ctx.fillStyle = "#DC1924";
@@ -265,16 +271,16 @@ const drawToCvs = () => {
       }
    }
 
-   ctx.font = unit + "px Arial";
-   ctx.fillStyle = "black";
-   ctx.fillText(dieValue, (numSquares * unit) / 2, (numSquares * unit) / 2);
+   // ctx.font = unit + "px Arial";
+   // ctx.fillStyle = "black";
+   // ctx.fillText(dieValue, (numSquares * unit) / 2, (numSquares * unit) / 2);
    ctx.font = unit / 2 + "px Arial";
    ctx.fillStyle = "black";
-   ctx.fillText(
-      "Player No: " + whoseTurn,
-      (numSquares * unit) / 2 - unit,
-      (numSquares * unit) / 2 - unit
-   );
+   // ctx.fillText(
+   //    "Player No: " + whoseTurn,
+   //    (numSquares * unit) / 2 - unit,
+   //    (numSquares * unit) / 2 - unit
+   // );
 
    for (let k = 1; k <= numPlayers; k++) {
       ctx.fillText("Score: " + score[k], lockers[k].x + 30, lockers[k].y + 30);
@@ -303,7 +309,7 @@ function drawToken(x, y, color, factor) {
 }
 
 const defineGamePlay = () => {
-   for (let i = 1; i <= numPlayers; i++) {
+   for (let i = 1; i <= 4; i++) {
       gamePlay[i] = {
          numTokenInLocker: numTokens,
          tokensPositions: [-1, -1, -1, -1],
@@ -321,15 +327,13 @@ const trackTokens = () => {
             for (let l = n; l < k; l++) {
                gamePlay[i].tokensPositions[l] = j;
             }
-            n = n + k;
+            n = k;
          }
       }
    }
 };
 
-const isThereAMove = () => {
-   
-}
+function isOnetokenPresent() {}
 
 const scaleNum = (num, factor) => {
    let result;
@@ -343,7 +347,6 @@ const scaleNum = (num, factor) => {
          result = num + corr;
       }
    }
-   ////console.log(result + " and corr is: " + corr);
    return result;
 };
 
@@ -354,22 +357,17 @@ const resetClicks = () => {
 
 const rand = (min, max) => min + Math.floor(Math.random() * (max - min + 0.7));
 
-document.getElementById("header").addEventListener(
-   "click",
-   function () {
-      ////console.log("canRoll: " + canRoll);
-      if (canRoll) rollDie();
-      else {
-         if (
-            gamePlay[whoseTurn].numTokenInLocker ==
-               numTokens - score[whoseTurn] &&
-            dieValue != 6
-         )
-            rollDie();
-      }
-   },
-   false
-);
+// document.getElementById("header").addEventListener(
+//    "click",
+//    function () {
+//       if (whoseTurn != 0) isThereAMove();
+//       if (canRoll) rollDie();
+//       else {
+//          if (!canMove) rollDie();
+//       }
+//    },
+//    false
+// );
 
 // document.getElementById('goNext').addEventListener('click', function () {
 //    document.getElementById("welcome").style.display = "none";
@@ -380,10 +378,13 @@ document.getElementById("header").addEventListener(
 //    document.getElementById("selectorColor").style.display = "none";
 // });
 
+let hasalreadySwitched = false;
+
 function rollDie() {
-   if (dieValue != 6 && !hasKilled && !hasHomed) {
+   if (dieValue != 6 && !hasKilled && !hasHomed && !hasalreadySwitched) {
       switchPlayer();
    }
+   hasalreadySwitched = false;
    canRoll = false;
    hasMoved = false;
    if (document.getElementById("rollorin").checked) dieValue = rand(1, 6);
@@ -392,42 +393,31 @@ function rollDie() {
    drawToCvs();
 }
 
-const switchPlayer = () => {
-   if (whoseTurn == numPlayers) {
-      whoseTurn = 1;
-   } else whoseTurn++;
-   // if (whoseTurn == 0) {
-   //    whoseTurn = 1;
-   // }
-   // else if (whoseTurn == 1) {
-   //    whoseTurn = 3;
-   // }
-   // else if (whoseTurn == 3) {
-   //    whoseTurn = 2;
-   // }
-
-   // else if (whoseTurn == 2) {
-   //    whoseTurn = 4;
-   // }
-
-   // else if (whoseTurn == 4) {
-   //    whoseTurn = 1;
-   // }
-};
-
-//number is 6 => no switch
-//has killed => no switch
-//has homed => no switch
-// num!=6 && !haskilled && !hashomed
-
-//has moved then only roll die
-//not 6 and   has not moved but also no coin to move- also can roll die
+function switchPlayer() {
+   if (whoseTurn == 0) {
+      whoseTurn = gameOrder[0];
+   } else
+      for (let j = 0; j < numPlayers; j++) {
+         if (whoseTurn == gameOrder[j]) {
+            if (j < numPlayers - 1) {
+               whoseTurn = gameOrder[j + 1];
+               break;
+            } else {
+               whoseTurn = gameOrder[0];
+               break;
+            }
+         }
+      }
+}
 
 function updateGame() {
-   //opening a token from locker:
    hasRolled = false;
    hasKilled = false;
    hasHomed = false;
+   canMove = false;
+
+   //opening a token from locker:
+
    if (
       dieValue == 6 &&
       hasClickedon(
@@ -439,7 +429,6 @@ function updateGame() {
       hasMoved == false &&
       gamePlay[whoseTurn].numTokenInLocker > 0
    ) {
-      //////console.log("dimpadu");
       gamePlay[whoseTurn].numTokenInLocker--;
       pathSquares[scaleNum(0, whoseTurn)].numTokensPlayer[whoseTurn]++;
       hasMoved = true;
@@ -455,7 +444,9 @@ function updateGame() {
          pathSquares[i].numTokensPlayer[whoseTurn] > 0
       ) {
          let temp = i;
+
          //should pass the first barrier
+
          if (temp + dieValue > pathLength - 1) {
             temp -= pathLength;
          }
@@ -468,6 +459,8 @@ function updateGame() {
             break;
          }
 
+         let counter = 0;
+
          for (let m = 1; m <= numPlayers; m++) {
             if (
                m != whoseTurn &&
@@ -478,9 +471,18 @@ function updateGame() {
                pathSquares[temp + dieValue].numTokensPlayer[m] = 0;
                hasKilled = true;
             }
+            if (
+               m == whoseTurn &&
+               pathSquares[temp + dieValue].numTokensPlayer[m] > 0
+            ) {
+               counter++;
+            }
          }
 
-         //if they reach thier home place they win
+         if (counter > 0) break;
+
+         //if they reach thier home place they score
+
          if (temp + dieValue == scaleNum(pathLength - 1, whoseTurn)) {
             score[whoseTurn]++;
             hasHomed = true;
@@ -491,11 +493,76 @@ function updateGame() {
          pathSquares[i].numTokensPlayer[whoseTurn]--;
          hasMoved = true;
          canRoll = true;
+         if (
+            (hasMoved ||
+            !canMove) &&
+            !hasKilled &&
+            !hasHomed &&
+            dieValue != 6 &&
+            !hasalreadySwitched
+         ) {
+            switchPlayer();
+            hasalreadySwitched = true;
+         }
       }
    }
+
    //drawing the changes to the canvas
-   drawToCvs();
    trackTokens();
+   drawToCvs();
+}
+
+function isThereAMove() {
+   canMove = true;
+
+   //If all open tokens are in locker and six is not rolled
+
+   if (
+      dieValue != 6 &&
+      gamePlay[whoseTurn].numTokenInLocker == numTokens - score[whoseTurn]
+   ) {
+      canMove = false;
+   } else if (dieValue == 6) {
+      canMove = true;
+   } else {
+      let canMoveConditionCounter = 0;
+
+      //if the token is in other square updating it:
+
+      for (let i = 0; i < numTokens; i++) {
+         if (gamePlay[whoseTurn].tokensPositions[i] > 0) {
+            //condition for a free token
+            let insideCounter = 0;
+            let temp = gamePlay[whoseTurn].tokensPositions[i];
+            if (temp + dieValue > pathLength - 1) {
+               temp -= pathLength;
+            }
+
+            if (
+               temp < scaleNum(0, whoseTurn) &&
+               temp + dieValue >= scaleNum(0, whoseTurn)
+            ) {
+               insideCounter++;
+            }
+
+            for (let j = 0; j < numTokens; j++) {
+               if (temp + dieValue == gamePlay[whoseTurn].tokensPositions[j]) {
+                  insideCounter++;
+               }
+            }
+            if (insideCounter > 0) {
+               canMoveConditionCounter++;
+            }
+         }
+      }
+
+      if (
+         canMoveConditionCounter ==
+         numTokens - score[whoseTurn] - gamePlay[whoseTurn].numTokenInLocker
+      )
+         canMove = false;
+   }
+   //console.log(canMove);
 }
 
 const hasClickedon = (x, y, w, h) =>
