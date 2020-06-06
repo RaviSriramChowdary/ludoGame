@@ -20,6 +20,9 @@
    width: 250px;
    height: 250px;
    display: none;
+   text-align: center;
+   font-size: 50px;
+   background-color: rgba(180, 180, 180, 0.21);
 }
 
 #dieHolder {
@@ -30,7 +33,7 @@
    align-items: center;
    justify-content: center;
    border: 2px solid black;
-   background-color: rgb(70, 69, 62);
+   background-color: rgba(180, 180, 180, 0.61);
 }
 
 #die {

@@ -59,6 +59,7 @@ document.getElementById("dieHolder").addEventListener(
       if (whoseTurn != 0) isThereAMove();
       if (canRoll) {
          rollDie();
+         isThereAMove();
          if (!canMove) {
             setTimeout(function () {
                switchPlayer();
@@ -71,8 +72,9 @@ document.getElementById("dieHolder").addEventListener(
          toggleClasses(dice);
          setTimeout(function () {
             document.getElementById("coverForDie").style.display = "none";
-         }, 2200);
+         }, 3200);
       } else {
+         isThereAMove();
          if (!canMove) {
             rollDie();
             setTimeout(function () {
@@ -84,7 +86,7 @@ document.getElementById("dieHolder").addEventListener(
             toggleClasses(dice);
             setTimeout(function () {
                document.getElementById("coverForDie").style.display = "none";
-            }, 2200);
+            }, 3200);
             canRoll = true;
          }
       }

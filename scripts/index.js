@@ -14,12 +14,12 @@ canRoll = true;
 hasKilled = false;
 hasHomed = false;
 
-let whoseTurn = 0;
+let whoseTurn = 1;
 let dieValue = 0;
 
-let numPlayers = 3;
+let numPlayers = 4;
 let gameOrder = new Array(numPlayers);
-gameOrder = [1,  3,4 ];
+gameOrder = [1,2, 3, 4];
 let numTokens = 4;
 
 let numSquares = 15;
@@ -319,8 +319,8 @@ const defineGamePlay = () => {
          if (i == value) {
             counter++;
          }
-      })
-      if(counter > 0)
+      });
+      if (counter > 0)
          gamePlay[i] = {
             numTokenInLocker: numTokens,
             tokensPositions: [-1, -1, -1, -1],
@@ -334,7 +334,7 @@ const defineGamePlay = () => {
 };
 
 const trackTokens = () => {
-   for (let i = 1; i <= numPlayers; i++) {
+   for (let i = 1; i <= 4; i++) {
       let n = 0;
       gamePlay[i].tokensPositions = [-1, -1, -1, -1];
       for (let j = 0; j < pathLength; j++) {
@@ -400,6 +400,7 @@ function rollDie() {
    // if (dieValue != 6 && !hasKilled && !hasHomed && !hasalreadySwitched) {
    //    switchPlayer();
    // }
+   hasRolled = true;
    hasalreadySwitched = false;
    canRoll = false;
    hasMoved = false;
@@ -426,10 +427,10 @@ function switchPlayer() {
          }
       }
    console.log("Switching Completed: Final Player : " + whoseTurn);
+   hasRolled = false;
 }
 
 function updateGame() {
-   hasRolled = false;
    hasKilled = false;
    hasHomed = false;
    canMove = false;
@@ -445,6 +446,7 @@ function updateGame() {
          lockWidth
       ) &&
       hasMoved == false &&
+      hasRolled &&
       gamePlay[whoseTurn].numTokenInLocker > 0
    ) {
       gamePlay[whoseTurn].numTokenInLocker--;
@@ -459,6 +461,7 @@ function updateGame() {
       if (
          hasClickedon(pathSquares[i].x, pathSquares[i].y, unit, unit) &&
          hasMoved == false &&
+         hasRolled &&
          pathSquares[i].numTokensPlayer[whoseTurn] > 0
       ) {
          let temp = i;
@@ -512,30 +515,32 @@ function updateGame() {
          hasMoved = true;
          canRoll = true;
          isThereAMove();
-         if (
-            ((hasMoved ||
-            !canMove) &&
-            !hasKilled &&
-            !hasHomed &&
-            dieValue != 6 &&
-            !hasalreadySwitched) || !canMove
+         if (score[whoseTurn] == 4) {
+            winOrder.push(whoseTurn);
+            let place;
+            gameOrder.forEach((value, index) => {
+               if (value == whoseTurn) {
+                  place = index;
+               }
+            });
+            switchPlayer();
+            gameOrder.splice(place, 1);
+            numPlayers--;
+            hasalreadySwitched = true;
+         }
+
+         else if (
+            ((hasMoved || !canMove) &&
+               !hasKilled &&
+               !hasHomed &&
+               dieValue != 6 &&
+               !hasalreadySwitched) ||
+            !canMove
          ) {
             switchPlayer();
             hasalreadySwitched = true;
          }
       }
-   }
-
-   if (score[whoseTurn] == 4) {
-      winOrder.push(whoseTurn);
-      let place;
-      gameOrder.forEach((value, index) => {
-         if (value == whoseTurn) {
-            place = index;
-         }
-      })
-      gameOrder.splice(place, 1);
-      numPlayers--;
    }
 
    //drawing the changes to the canvas
@@ -547,7 +552,6 @@ let winOrder = [];
 
 function isThereAMove() {
    canMove = true;
-
    //If all open tokens are in locker and six is not rolled
 
    if (
@@ -555,7 +559,7 @@ function isThereAMove() {
       gamePlay[whoseTurn].numTokenInLocker == numTokens - score[whoseTurn]
    ) {
       canMove = false;
-   } else if (dieValue == 6) {
+   } else if (dieValue == 6 && gamePlay[whoseTurn].numTokenInLocker > 0) {
       canMove = true;
    } else {
       let canMoveConditionCounter = 0;
@@ -563,7 +567,7 @@ function isThereAMove() {
       //if the token is in other square updating it:
 
       for (let i = 0; i < numTokens; i++) {
-         if (gamePlay[whoseTurn].tokensPositions[i] > 0) {
+         if (gamePlay[whoseTurn].tokensPositions[i] >= 0) {
             //condition for a free token
             let insideCounter = 0;
             let temp = gamePlay[whoseTurn].tokensPositions[i];
