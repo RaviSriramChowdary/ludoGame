@@ -64,16 +64,16 @@ document.getElementById("dieHolder").addEventListener(
          toggleClasses(dice);
          setTimeout(function () {
             document.getElementById("coverForDie").style.display = "none";
-         }, 3000);
+         },3000);
       } else {
          if (!canMove) {
-            rollDie();
-            document.getElementById("coverForDie").style.display = "block";
-            rollNum = dieValue;
-            toggleClasses(dice);
-            setTimeout(function () {
-               document.getElementById("coverForDie").style.display = "none";
-            }, 3000);
+         rollDie();
+         document.getElementById("coverForDie").style.display = "block";
+         rollNum = dieValue;
+         toggleClasses(dice);
+         setTimeout(function () {
+            document.getElementById("coverForDie").style.display = "none";
+         },3000);
          }
       }
    },
