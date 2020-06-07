@@ -133,7 +133,8 @@ let lockers = [
 ];
 
 let lockWidth = cvs.width / 2 - 2 * unit;
-
+let star = new Image();
+star.src = "../img/star.png";
 const drawToCvs = () => {
    //Drawing the path
    ctx.fillStyle = "white";
@@ -152,7 +153,8 @@ const drawToCvs = () => {
       if (i == 3 * numSquares - 3) ctx.fillStyle = "#0EABDE";
       if (i == 3 * numSquares - 4) ctx.fillStyle = "#9fe4f9";
       ctx.fillRect(gamePath[i].x, gamePath[i].y, unit, unit);
-
+      if (pathSquares[i].isSafeSquare)
+         ctx.drawImage(star, gamePath[i].x + 8, gamePath[i].y + 8, unit - 16, unit - 16);
       ctx.strokeStyle = "#00000010";
       ctx.lineWidth = unit / 8;
       let x = ctx.lineWidth;
@@ -351,7 +353,7 @@ const drawToCvs = () => {
       ctx.fillText(
          names[[gameOrder[k]]],
          lockers[[gameOrder[k]]].x + 50,
-         lockers[[gameOrder[k]]].y -5
+         lockers[[gameOrder[k]]].y - 5
       );
       ctx.fillText(
          score[[gameOrder[k]]],
@@ -643,7 +645,9 @@ function rollDie() {
          updateGame();
       }, 3200);
    }
-   drawToCvs();
+   setTimeout(function () {
+      drawToCvs();
+   }, dieValue * 150);
 }
 
 function switchPlayer() {
@@ -693,6 +697,8 @@ function updateGame() {
       hasMoved = true;
       canRoll = true;
    }
+   trackTokens();
+   drawToCvs();
 
    //if the token is in other square updating it:
 
@@ -727,10 +733,12 @@ function updateGame() {
                pathSquares[temp + dieValue].numTokensPlayer[m] > 0 &&
                !pathSquares[temp + dieValue].isSafeSquare
             ) {
-               gamePlay[m].numTokenInLocker +=
-                  pathSquares[temp + dieValue].numTokensPlayer[m];
-               pathSquares[temp + dieValue].numTokensPlayer[m] = 0;
-               hasKilled = true;
+               setTimeout(function () {
+                  gamePlay[m].numTokenInLocker +=
+                     pathSquares[temp + dieValue].numTokensPlayer[m];
+                  pathSquares[temp + dieValue].numTokensPlayer[m] = 0;
+                  hasKilled = true;
+               }, dieValue * 150);
             }
             if (
                m == whoseTurn &&
@@ -744,60 +752,120 @@ function updateGame() {
          if (counter > 0) break;
 
          //if they reach thier home place they score
+         let g = -1;
 
          if (temp + dieValue == scaleNum(pathLength - 1, whoseTurn)) {
             score[whoseTurn]++;
             hasHomed = true;
          } else {
-            pathSquares[temp + dieValue].numTokensPlayer[whoseTurn]++;
+            g = 0;
+            // pathSquares[temp + dieValue].numTokensPlayer[whoseTurn]++;
+            let game = setInterval(function () {
+               pathSquares[temp + g].numTokensPlayer[whoseTurn]--;
+               pathSquares[temp + g + 1].numTokensPlayer[whoseTurn]++;
+               trackTokens();
+               drawToCvs();
+               if (dieValue == g + 1) {
+                  clearInterval(game);
+                  hasMoved = true;
+                  canRoll = true;
+                  isThereAMove();
+                  if (score[whoseTurn] == numTokens) {
+                     winOrder.push(whoseTurn);
+                     let place;
+                     gameOrder.forEach((value, index) => {
+                        if (value == whoseTurn) {
+                           place = index;
+                        }
+                     });
+                     switchPlayer();
+                     gameOrder.splice(place, 1);
+                     numPlayers--;
+                     hasalreadySwitched = true;
+
+                     if (numPlayers <= 1) {
+                        winOrder.push(whoseTurn);
+                        document.getElementById("scorecard").innerHTML =
+                           "<h1>Score Card</h1>" + "<ol>";
+                        for (let i = 0; i < winOrder.length; i++) {
+                           console.log(names[winOrder[i]]);
+                           document.getElementById("scorecard").innerHTML +=
+                              "<li>" + names[winOrder[i]] + "</li>";
+                        }
+                        document.getElementById("scorecard").innerHTML +=
+                           "</ol>";
+                        document.getElementById("scorebackdrop").style.display =
+                           "flex";
+                     }
+                  } else if (
+                     ((hasMoved || !canMove) &&
+                        !hasKilled &&
+                        !hasHomed &&
+                        dieValue != 6 &&
+                        !hasalreadySwitched) ||
+                     !canMove
+                  ) {
+                     switchPlayer();
+                     hasalreadySwitched = true;
+                  }
+                  trackTokens();
+                  drawToCvs();
+               }
+
+               g++;
+               console.log("Writing");
+            }, 150);
          }
 
-         pathSquares[i].numTokensPlayer[whoseTurn]--;
-         hasMoved = true;
-         canRoll = true;
-         isThereAMove();
-         if (score[whoseTurn] == numTokens) {
-            winOrder.push(whoseTurn);
-            let place;
-            gameOrder.forEach((value, index) => {
-               if (value == whoseTurn) {
-                  place = index;
-               }
-            });
-            switchPlayer();
-            gameOrder.splice(place, 1);
-            numPlayers--;
-            hasalreadySwitched = true;
-
-            if (numPlayers <= 1) {
+         if (g == -1) {
+            pathSquares[i].numTokensPlayer[whoseTurn]--;
+            hasMoved = true;
+            canRoll = true;
+            isThereAMove();
+            if (score[whoseTurn] == numTokens) {
                winOrder.push(whoseTurn);
-               document.getElementById("scorecard").innerHTML = "<h1>Score Card</h1>" +
-                  "<ol>";
-               for (let i = 0; i < winOrder.length; i++) {
-                  console.log(names[winOrder[i]]);
-                  document.getElementById("scorecard").innerHTML += "<li>" + names[winOrder[i]] + "</li>";
+               let place;
+               gameOrder.forEach((value, index) => {
+                  if (value == whoseTurn) {
+                     place = index;
+                  }
+               });
+               switchPlayer();
+               gameOrder.splice(place, 1);
+               numPlayers--;
+               hasalreadySwitched = true;
+
+               if (numPlayers <= 1) {
+                  winOrder.push(whoseTurn);
+                  document.getElementById("scorecard").innerHTML =
+                     "<h1>Score Card</h1>" + "<ol>";
+                  for (let i = 0; i < winOrder.length; i++) {
+                     console.log(names[winOrder[i]]);
+                     document.getElementById("scorecard").innerHTML +=
+                        "<li>" + names[winOrder[i]] + "</li>";
+                  }
+                  document.getElementById("scorecard").innerHTML += "</ol>";
+                  document.getElementById("scorebackdrop").style.display =
+                     "flex";
                }
-               document.getElementById("scorecard").innerHTML +=
-                  "</ol>";
-               document.getElementById("scorebackdrop").style.display = "flex";
+            } else if (
+               ((hasMoved || !canMove) &&
+                  !hasKilled &&
+                  !hasHomed &&
+                  dieValue != 6 &&
+                  !hasalreadySwitched) ||
+               !canMove
+            ) {
+               switchPlayer();
+               hasalreadySwitched = true;
             }
-         } else if (
-            ((hasMoved || !canMove) &&
-               !hasKilled &&
-               !hasHomed &&
-               dieValue != 6 &&
-               !hasalreadySwitched) ||
-            !canMove
-         ) {
-            switchPlayer();
-            hasalreadySwitched = true;
+            trackTokens();
+            drawToCvs();
          }
       }
    }
 
    //drawing the changes to the canvas
-   trackTokens();
-   drawToCvs();
 }
 
 let winOrder = [];
