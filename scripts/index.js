@@ -9,21 +9,32 @@ window.addEventListener("resize", function () {
    if (document.body.offsetWidth < 724) {
       scale = document.body.offsetWidth / cvs.offsetWidth;
       cvsHolder.style.transform = "translate(-50%, -50%) scale(" + scale + ")";
-   }
-   else if (document.body.offsetWidth >= 724) {
+   } else if (document.body.offsetWidth >= 724) {
       scale = 1;
       cvsHolder.style.transform = "translate(-50%, -50%) scale(" + scale + ")";
    }
+   document.getElementById("numberinput").style.paddingTop =
+      document.body.offsetHeight / 2 - cvs.height * scale * 0.45 - 80 + "px";
 });
 if (document.body.offsetWidth < 724) {
    console.log("Hi");
    scale = document.body.offsetWidth / cvs.offsetWidth;
    cvsHolder.style.transform = "translate(-50%, -50%) scale(" + scale + ")";
+   document.getElementById("numberinput").style.paddingTop =
+      document.body.offsetHeight / 2 - cvs.height * scale * 0.45 - 80 + "px";
 }
+document.getElementById("numberinput").style.paddingTop =
+   document.body.offsetHeight / 2 - cvs.height * scale * 0.45 - 80 + "px";
 
 cvsHolder.style.width = cvs.offsetWidth + "px";
 
-let hasRolled, hasMoved, canRoll, hasKilled, hasHomed, canMove;
+let hasRolled,
+   hasMoved,
+   canRoll,
+   hasKilled,
+   hasHomed,
+   canMove,
+   onlyOnemove = { value: 0, positionCanBeMoved: null };
 
 hasRolled = false;
 hasMoved = false;
@@ -46,7 +57,7 @@ let pathLength = 4 * numSquares - 4;
 
 let gamePlay;
 let gamePath = new Array();
-let pathSquares = new Array(gamePath.length);
+let pathSquares = new Array();
 
 let clickedX, clickedY;
 
@@ -110,6 +121,7 @@ const addNext = (x, y, array) => {
 };
 
 const colors = ["black", "#DC1924", "#2AA44A", "#FFDE16", "#0EABDE"];
+
 //sample codes here:
 
 let lockers = [
@@ -166,15 +178,49 @@ const drawToCvs = () => {
 
       ctx.font = "18px Arial";
       ctx.fillStyle = "black";
-      for (let j = 1; j < numTokens + 1; j++) {
+      for (let j = 1; j < 4 + 1; j++) {
          if (pathSquares[i].numTokensPlayer[j] > 0) {
-            for (let l = 0; l < pathSquares[i].numTokensPlayer[j]; l++) {
-               drawToken(
-                  gamePath[i].x + unit / 2,
-                  gamePath[i].y + unit / 2,
-                  colors[j],
-                  1 / pathSquares[i].numTokensPlayer[j]
-               );
+            if (pathSquares[i].isSafeSquare) {
+               for (let l = 0; l < pathSquares[i].numTokensPlayer[j]; l++) {
+                  if (j == 1) {
+                     drawToken(
+                        gamePath[i].x + unit / 4 + (l * unit) / 8,
+                        gamePath[i].y + unit / 4,
+                        colors[j],
+                        3 / 4
+                     );
+                  } else if (j == 2) {
+                     drawToken(
+                        gamePath[i].x + (3 * unit) / 4,
+                        gamePath[i].y + unit / 4 + (l * unit) / 8,
+                        colors[j],
+                        3 / 4
+                     );
+                  } else if (j == 3) {
+                     drawToken(
+                        gamePath[i].x + (3 * unit) / 4 - (l * unit) / 8,
+                        gamePath[i].y + (3 * unit) / 4,
+                        colors[j],
+                        3 / 4
+                     );
+                  } else if (j == 4) {
+                     drawToken(
+                        gamePath[i].x + unit / 4,
+                        gamePath[i].y + (3 * unit) / 4 - (l * unit) / 8,
+                        colors[j],
+                        3 / 4
+                     );
+                  }
+               }
+            } else {
+               for (let l = 0; l < pathSquares[i].numTokensPlayer[j]; l++) {
+                  drawToken(
+                     gamePath[i].x + unit / 2,
+                     gamePath[i].y + unit / 2,
+                     colors[j],
+                     1
+                  );
+               }
             }
          }
       }
@@ -300,12 +346,69 @@ const drawToCvs = () => {
    //    (numSquares * unit) / 2 - unit,
    //    (numSquares * unit) / 2 - unit
    // );
-
+   ctx.lineWidth = 1;
    for (let k = 0; k < numPlayers; k++) {
       ctx.fillText(
-         "Score: " + score[[gameOrder[k]]],
-         lockers[[gameOrder[k]]].x + 30,
-         lockers[[gameOrder[k]]].y + 30
+         names[[gameOrder[k]]],
+         lockers[[gameOrder[k]]].x + 50,
+         lockers[[gameOrder[k]]].y -5
+      );
+      ctx.fillText(
+         score[[gameOrder[k]]],
+         lockers[[gameOrder[k]]].x + lockWidth / 2 + 25,
+         lockers[[gameOrder[k]]].y + lockWidth / 2 + 8
+      );
+      ctx.fillStyle = "black";
+      ctx.fillRect(
+         lockers[[gameOrder[k]]].x + lockWidth / 2 - 12,
+         lockers[[gameOrder[k]]].y + lockWidth / 2 - 12,
+         12,
+         12
+      );
+      ctx.strokeRect(
+         lockers[[gameOrder[k]]].x + lockWidth / 2 - 12,
+         lockers[[gameOrder[k]]].y + lockWidth / 2 - 12,
+         12,
+         12
+      );
+      ctx.fillStyle = "white";
+      ctx.fillRect(
+         lockers[[gameOrder[k]]].x + lockWidth / 2,
+         lockers[[gameOrder[k]]].y + lockWidth / 2 - 12,
+         12,
+         12
+      );
+      ctx.strokeRect(
+         lockers[[gameOrder[k]]].x + lockWidth / 2,
+         lockers[[gameOrder[k]]].y + lockWidth / 2 - 12,
+         12,
+         12
+      );
+      ctx.fillStyle = "white";
+      ctx.fillRect(
+         lockers[[gameOrder[k]]].x + lockWidth / 2 - 12,
+         lockers[[gameOrder[k]]].y + lockWidth / 2,
+         12,
+         12
+      );
+      ctx.strokeRect(
+         lockers[[gameOrder[k]]].x + lockWidth / 2 - 12,
+         lockers[[gameOrder[k]]].y + lockWidth / 2,
+         12,
+         12
+      );
+      ctx.fillStyle = "black";
+      ctx.fillRect(
+         lockers[[gameOrder[k]]].x + lockWidth / 2,
+         lockers[[gameOrder[k]]].y + lockWidth / 2,
+         12,
+         12
+      );
+      ctx.strokeRect(
+         lockers[[gameOrder[k]]].x + lockWidth / 2,
+         lockers[[gameOrder[k]]].y + lockWidth / 2,
+         12,
+         12
       );
    }
 };
@@ -367,8 +470,6 @@ const trackTokens = () => {
       }
    }
 };
-
-function isOnetokenPresent() {}
 
 const scaleNum = (num, factor) => {
    let result;
@@ -435,6 +536,10 @@ document.getElementById("simpleLudo").addEventListener("click", function () {
       document.getElementsByClassName("colorInput")[0].value = 1;
       document.getElementsByClassName("colorInput")[1].value = 3;
       document.getElementsByClassName("colorInput")[1].disabled = true;
+   } else {
+      document.getElementsByClassName("colorInput")[0].value = 1;
+      document.getElementsByClassName("colorInput")[1].value = 2;
+      document.getElementsByClassName("colorInput")[1].disabled = false;
    }
 });
 
@@ -453,7 +558,7 @@ document.getElementById("player1").addEventListener("change", function (e) {
 });
 
 document.getElementById("startGame").addEventListener("click", function () {
-   names = new Array(numPlayers);
+   names = new Array(5);
    gameOrder = new Array();
    let errorCounter = 0;
    if (numPlayers > 2) {
@@ -482,15 +587,29 @@ document.getElementById("startGame").addEventListener("click", function () {
          document.getElementsByClassName("colorInput")[1].value
       );
    }
+   for (let i = 0; i <= 4; i++) {
+      names[i] = null;
+   }
+   for (let i = 0; i < numPlayers; i++) {
+      names[
+         document.getElementsByClassName("colorInput")[i].value
+      ] = document.getElementsByClassName("name")[i].value;
+   }
    gameOrder.sort();
    console.log(gameOrder);
    whoseTurn = gameOrder[0];
+   document.getElementById("dieHolder").style.backgroundColor =
+      colors[whoseTurn] + "aa";
    document.getElementById("selectorColor").style.display = "none";
    numTokens = parseInt(document.getElementById("numTokens").value);
    gamePlay = new Array(numPlayers + 1);
    defineGamePlay();
    definePath();
    drawToCvs();
+});
+
+document.getElementById("restart").addEventListener("click", function () {
+   location.reload();
 });
 
 document.getElementById("back").addEventListener("click", function () {
@@ -511,6 +630,19 @@ function rollDie() {
    if (document.getElementById("rollorin").checked) dieValue = rand(1, 6);
    else dieValue = parseInt(document.getElementById("inValue").value);
    resetClicks();
+   isOnetokenPresent();
+   if (onlyOnemove.value == 1) {
+      if (onlyOnemove.positionCanBeMoved != -1) {
+         clickedX = pathSquares[onlyOnemove.positionCanBeMoved].x + unit / 2;
+         clickedY = pathSquares[onlyOnemove.positionCanBeMoved].y + unit / 2;
+      } else if (onlyOnemove.positionCanBeMoved == -1) {
+         clickedX = lockers[whoseTurn].x + lockWidth / 2;
+         clickedY = lockers[whoseTurn].y + lockWidth / 2;
+      }
+      setTimeout(function () {
+         updateGame();
+      }, 3200);
+   }
    drawToCvs();
 }
 
@@ -530,6 +662,9 @@ function switchPlayer() {
             }
          }
       }
+
+   document.getElementById("dieHolder").style.backgroundColor =
+      colors[whoseTurn] + "70";
    console.log("Switching Completed: Final Player : " + whoseTurn);
    hasRolled = false;
 }
@@ -589,7 +724,8 @@ function updateGame() {
          for (let m = 1; m <= 4; m++) {
             if (
                m != whoseTurn &&
-               pathSquares[temp + dieValue].numTokensPlayer[m] > 0
+               pathSquares[temp + dieValue].numTokensPlayer[m] > 0 &&
+               !pathSquares[temp + dieValue].isSafeSquare
             ) {
                gamePlay[m].numTokenInLocker +=
                   pathSquares[temp + dieValue].numTokensPlayer[m];
@@ -598,7 +734,8 @@ function updateGame() {
             }
             if (
                m == whoseTurn &&
-               pathSquares[temp + dieValue].numTokensPlayer[m] > 0
+               pathSquares[temp + dieValue].numTokensPlayer[m] > 0 &&
+               !pathSquares[temp + dieValue].isSafeSquare
             ) {
                counter++;
             }
@@ -631,6 +768,19 @@ function updateGame() {
             gameOrder.splice(place, 1);
             numPlayers--;
             hasalreadySwitched = true;
+
+            if (numPlayers <= 1) {
+               winOrder.push(whoseTurn);
+               document.getElementById("scorecard").innerHTML = "<h1>Score Card</h1>" +
+                  "<ol>";
+               for (let i = 0; i < winOrder.length; i++) {
+                  console.log(names[winOrder[i]]);
+                  document.getElementById("scorecard").innerHTML += "<li>" + names[winOrder[i]] + "</li>";
+               }
+               document.getElementById("scorecard").innerHTML +=
+                  "</ol>";
+               document.getElementById("scorebackdrop").style.display = "flex";
+            }
          } else if (
             ((hasMoved || !canMove) &&
                !hasKilled &&
@@ -685,7 +835,10 @@ function isThereAMove() {
             }
 
             for (let j = 0; j < numTokens; j++) {
-               if (temp + dieValue == gamePlay[whoseTurn].tokensPositions[j]) {
+               if (
+                  temp + dieValue == gamePlay[whoseTurn].tokensPositions[j] &&
+                  !pathSquares[temp + dieValue].isSafeSquare
+               ) {
                   insideCounter++;
                }
             }
@@ -701,7 +854,82 @@ function isThereAMove() {
       )
          canMove = false;
    }
-   //console.log(canMove);
+   isOnetokenPresent();
+}
+
+function isOnetokenPresent() {
+   let possibleMoves = new Array();
+   // re setting the onlyOnemove variable
+   onlyOnemove.value = 0;
+   onlyOnemove.positionCanBeMoved = null;
+
+   //Conditions checking if only one move is possible
+
+   //If there are some tokens inside the locker and the die rolled 6 then taking all the locked tokens move to be 1
+   if (dieValue == 6 && gamePlay[whoseTurn].numTokenInLocker > 0) {
+      onlyOnemove.value = 1;
+      onlyOnemove.positionCanBeMoved = -1;
+      possibleMoves.push(-1);
+   }
+
+   //and then we have to go to the tokens that are not inside the locker
+
+   let onemoveConditionCounter = 0;
+   let posvar = null;
+
+   for (let i = 0; i < numTokens; i++) {
+      if (gamePlay[whoseTurn].tokensPositions[i] >= 0) {
+         posvar = gamePlay[whoseTurn].tokensPositions[i];
+         //condition for a free token
+         let insideCounter = 0;
+         let temp = gamePlay[whoseTurn].tokensPositions[i];
+         if (temp + dieValue > pathLength - 1) {
+            temp -= pathLength;
+         }
+         //Should not pass their barriers
+         if (
+            temp < scaleNum(0, whoseTurn) &&
+            temp + dieValue >= scaleNum(0, whoseTurn)
+         ) {
+            insideCounter++;
+         }
+         //should not duplicate unless it is a safe square
+         for (let j = 0; j < numTokens; j++) {
+            if (
+               temp + dieValue == gamePlay[whoseTurn].tokensPositions[j] &&
+               !pathSquares[temp + dieValue].isSafeSquare
+            ) {
+               insideCounter++;
+            }
+         }
+         if (insideCounter > 0) {
+            onemoveConditionCounter++;
+         }
+
+         if (insideCounter == 0) {
+            //The token can be moved
+            if (onlyOnemove.value == 0) {
+               //Still no token found
+               //then
+               onlyOnemove.value++;
+               onlyOnemove.positionCanBeMoved = posvar;
+               possibleMoves.push(posvar);
+            } else if (onlyOnemove.value > 0) {
+               //Already a token found
+               //then checking if it has been in the same caught position
+               if (posvar != onlyOnemove.positionCanBeMoved) {
+                  onlyOnemove.value++;
+                  possibleMoves.push(posvar);
+               } else possibleMoves.push(posvar);
+            }
+         }
+      }
+   }
+
+   console.log(
+      onlyOnemove.value + " Position Caught : " + onlyOnemove.positionCanBeMoved
+   );
+   console.log(possibleMoves);
 }
 
 const hasClickedon = (x, y, w, h) =>

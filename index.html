@@ -18,11 +18,11 @@
          <img src="img/logo.jpg" class="logo" />
          <h1>Ludo Game</h1>
          <div class="selection">
-            <label for="numPlayers">Number of Players:</label><br />
+            <label for="numPlayers">Number of Players:(2 to 4)</label><br />
             <button class="iconBtn" id="incPlayers">
                <i class="fas fa-plus"></i>
             </button>
-            <input type="number" value="4" id="numPlayers" /><i
+            <input type="number" value="2" id="numPlayers" /><i
                class="fas fa-user"
             ></i>
             <button class="iconBtn" id="decPlayers">
@@ -99,15 +99,21 @@
       </div>
 
       <div class="jccent aicent mainBox">
-         <h1>Ludo Game</h1>
-         <input
-            type="checkbox"
-            value="roll"
-            name="rolloin"
-            id="rollorin"
-            checked
-         />Roll
-         <input type="number" id="inValue" value="6" />
+         <div id="numberinput">
+            <button id="restart">Exit</button>
+            <input
+               type="checkbox"
+               value="roll"
+               name="rolloin"
+               id="rollorin"
+               checked
+            />Roll
+            <label for="rollorin">
+               <div class="slidebar"><div class="slider"></div></div>
+            </label>
+               Enter Value
+            <input type="number" id="inValue" value="6" />
+         </div>
          <div id="canvasHolder">
             <canvas id="gameCanvas"></canvas>
 
@@ -199,6 +205,19 @@
                   </div>
                </div>
             </div>
+         </div>
+      </div>
+
+      <div id="scorebackdrop">
+         <div id="scorecard">
+
+            <h1>Score Card</h1>
+            <ol>
+               <li>Sriram</li>
+               <li>Sriram chowdary</li>
+               <li>Sriram</li>
+               <li>Sriram</li>
+            </ol>
          </div>
       </div>
 
