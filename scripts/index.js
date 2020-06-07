@@ -135,6 +135,7 @@ let lockers = [
 let lockWidth = cvs.width / 2 - 2 * unit;
 let star = new Image();
 star.src = "../img/star.png";
+
 const drawToCvs = () => {
    //Drawing the path
    ctx.fillStyle = "white";
@@ -153,8 +154,8 @@ const drawToCvs = () => {
       if (i == 3 * numSquares - 3) ctx.fillStyle = "#0EABDE";
       if (i == 3 * numSquares - 4) ctx.fillStyle = "#9fe4f9";
       ctx.fillRect(gamePath[i].x, gamePath[i].y, unit, unit);
-      if (pathSquares[i].isSafeSquare)
-         ctx.drawImage(star, gamePath[i].x + 8, gamePath[i].y + 8, unit - 16, unit - 16);
+      // if (pathSquares[i].isSafeSquare)
+         // ctx.drawImage(star, gamePath[i].x + 8, gamePath[i].y + 8, unit - 16, unit - 16);
       ctx.strokeStyle = "#00000010";
       ctx.lineWidth = unit / 8;
       let x = ctx.lineWidth;
