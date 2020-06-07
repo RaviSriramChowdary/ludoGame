@@ -8,6 +8,11 @@ html {
 }
 body {
    overflow: hidden;
+   background: linear-gradient(
+      to right bottom,
+      rgb(87, 167, 163),
+      rgb(0, 174, 255)
+   );
 }
 
 .flex {
@@ -33,7 +38,12 @@ body {
 #canvasHolder {
    display: block;
    margin: 0 auto;
-   position: relative;
+   transform-origin: 50% 50%;
+   /* position: relative; */
+   position: fixed;
+   top: 50%;
+   left: 50%;
+   transform: translate(-50%, -50%);
 }
 
 #gameCanvas {
@@ -123,15 +133,33 @@ input[type="number"] {
    display: none;
 }
 
+#back{
+   display: flex;
+   width: 200px;
+   text-align: left;
+}
+
 #selectorColor img {
    width: 50px;
    text-align: left;
-   display: block;
+   display: inline-block;
    margin: 40px;
    border-radius: 5px;
    border: 1px solid black;
 }
 
+#backBtn{
+   font-size: 40px;
+}
+
+#selectorColor #numTokens{
+   display: inline-block;
+   font-size: 1.5rem;
+}
+#selectorColor #numTokenslabel{
+   display: inline-block;
+   font-size: 1rem;
+}
 .modal h2 {
    margin-bottom: 10px;
 }

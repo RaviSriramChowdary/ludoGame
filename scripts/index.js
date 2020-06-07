@@ -4,6 +4,23 @@ const cvsHolder = document.getElementById("canvasHolder");
 const ctx = cvs.getContext("2d");
 cvs.width = 720;
 cvs.height = cvs.width;
+let scale = 1;
+window.addEventListener("resize", function () {
+   if (document.body.offsetWidth < 724) {
+      scale = document.body.offsetWidth / cvs.offsetWidth;
+      cvsHolder.style.transform = "translate(-50%, -50%) scale(" + scale + ")";
+   }
+   else if (document.body.offsetWidth >= 724) {
+      scale = 1;
+      cvsHolder.style.transform = "translate(-50%, -50%) scale(" + scale + ")";
+   }
+});
+if (document.body.offsetWidth < 724) {
+   console.log("Hi");
+   scale = document.body.offsetWidth / cvs.offsetWidth;
+   cvsHolder.style.transform = "translate(-50%, -50%) scale(" + scale + ")";
+}
+
 cvsHolder.style.width = cvs.offsetWidth + "px";
 
 let hasRolled, hasMoved, canRoll, hasKilled, hasHomed, canMove;
@@ -14,18 +31,20 @@ canRoll = true;
 hasKilled = false;
 hasHomed = false;
 
-let whoseTurn = 1;
+let whoseTurn;
 let dieValue = 0;
 
-let numPlayers = 4;
-let gameOrder = new Array(numPlayers);
-gameOrder = [1,2, 3, 4];
-let numTokens = 4;
+let numPlayers;
+let gameOrder;
+// gameOrder = [1, 4];
+let numTokens;
+
+let names;
 
 let numSquares = 15;
 let pathLength = 4 * numSquares - 4;
 
-let gamePlay = new Array(numPlayers + 1);
+let gamePlay;
 let gamePath = new Array();
 let pathSquares = new Array(gamePath.length);
 
@@ -373,26 +392,111 @@ const resetClicks = () => {
 
 const rand = (min, max) => min + Math.floor(Math.random() * (max - min + 0.7));
 
-// document.getElementById("header").addEventListener(
-//    "click",
-//    function () {
-//       if (whoseTurn != 0) isThereAMove();
-//       if (canRoll) rollDie();
-//       else {
-//          if (!canMove) rollDie();
-//       }
-//    },
-//    false
-// );
+document.getElementById("incPlayers").addEventListener("click", function () {
+   numPlayers = parseInt(document.getElementById("numPlayers").value);
+   if (numPlayers < 4)
+      document.getElementById("numPlayers").value =
+         parseInt(document.getElementById("numPlayers").value) + 1;
+});
 
-// document.getElementById('goNext').addEventListener('click', function () {
-//    document.getElementById("welcome").style.display = "none";
-//    document.getElementById('selectorColor').style.display = "block";
-// })
+document.getElementById("decPlayers").addEventListener("click", function () {
+   numPlayers = parseInt(document.getElementById("numPlayers").value);
+   if (numPlayers > 2)
+      document.getElementById("numPlayers").value =
+         parseInt(document.getElementById("numPlayers").value) - 1;
+});
 
-// document.getElementById("startGame").addEventListener("click", function () {
-//    document.getElementById("selectorColor").style.display = "none";
-// });
+document.getElementById("incTokens").addEventListener("click", function () {
+   numTokens = parseInt(document.getElementById("numTokens").value);
+   if (numTokens < 4)
+      document.getElementById("numTokens").value =
+         parseInt(document.getElementById("numTokens").value) + 1;
+});
+
+document.getElementById("decTokens").addEventListener("click", function () {
+   numTokens = parseInt(document.getElementById("numTokens").value);
+   if (numTokens > 2)
+      document.getElementById("numTokens").value =
+         parseInt(document.getElementById("numTokens").value) - 1;
+});
+
+document.getElementById("simpleLudo").addEventListener("click", function () {
+   document.getElementById("welcome").style.display = "none";
+   document.getElementById("selectorColor").style.display = "block";
+   numPlayers = parseInt(document.getElementById("numPlayers").value);
+   players = document.getElementsByClassName("orderselector");
+   for (let i = 0; i < 4; i++) {
+      players[i].style.display = "none";
+   }
+   for (let i = 0; i < numPlayers; i++) {
+      players[i].style.display = "block";
+   }
+   if (numPlayers <= 2) {
+      document.getElementsByClassName("colorInput")[0].value = 1;
+      document.getElementsByClassName("colorInput")[1].value = 3;
+      document.getElementsByClassName("colorInput")[1].disabled = true;
+   }
+});
+
+document.getElementById("player1").addEventListener("change", function (e) {
+   if (numPlayers <= 2) {
+      let value = parseInt(e.target.value);
+      let newValue;
+      if (value <= 2) {
+         newValue = value + 2;
+         document.getElementsByClassName("colorInput")[1].value = newValue;
+      } else {
+         newValue = value - 2;
+         document.getElementsByClassName("colorInput")[1].value = newValue;
+      }
+   }
+});
+
+document.getElementById("startGame").addEventListener("click", function () {
+   names = new Array(numPlayers);
+   gameOrder = new Array();
+   let errorCounter = 0;
+   if (numPlayers > 2) {
+      for (let i = 0; i < numPlayers; i++) {
+         gameOrder.forEach((value, index) => {
+            if (
+               value ==
+               parseInt(document.getElementsByClassName("colorInput")[i].value)
+            )
+               errorCounter++;
+         });
+         if (errorCounter == 0)
+            gameOrder.push(
+               parseInt(document.getElementsByClassName("colorInput")[i].value)
+            );
+         else {
+            alert("Enter Different colors.");
+            return;
+         }
+      }
+   } else {
+      gameOrder[0] = parseInt(
+         document.getElementsByClassName("colorInput")[0].value
+      );
+      gameOrder[1] = parseInt(
+         document.getElementsByClassName("colorInput")[1].value
+      );
+   }
+   gameOrder.sort();
+   console.log(gameOrder);
+   whoseTurn = gameOrder[0];
+   document.getElementById("selectorColor").style.display = "none";
+   numTokens = parseInt(document.getElementById("numTokens").value);
+   gamePlay = new Array(numPlayers + 1);
+   defineGamePlay();
+   definePath();
+   drawToCvs();
+});
+
+document.getElementById("back").addEventListener("click", function () {
+   document.getElementById("welcome").style.display = "block";
+   document.getElementById("selectorColor").style.display = "none";
+});
 
 let hasalreadySwitched = false;
 
@@ -515,7 +619,7 @@ function updateGame() {
          hasMoved = true;
          canRoll = true;
          isThereAMove();
-         if (score[whoseTurn] == 4) {
+         if (score[whoseTurn] == numTokens) {
             winOrder.push(whoseTurn);
             let place;
             gameOrder.forEach((value, index) => {
@@ -527,9 +631,7 @@ function updateGame() {
             gameOrder.splice(place, 1);
             numPlayers--;
             hasalreadySwitched = true;
-         }
-
-         else if (
+         } else if (
             ((hasMoved || !canMove) &&
                !hasKilled &&
                !hasHomed &&
@@ -610,13 +712,10 @@ cvs.addEventListener("touchstart", touchPositionDetect, false);
 
 function touchPositionDetect(event) {
    let rect = cvs.getBoundingClientRect();
+   console.log("Client X: " + event.clientX + "Client Y: " + event.clientY);
    let x = event.clientX - rect.left;
    let y = event.clientY - rect.top;
-   clickedX = x;
-   clickedY = y;
+   clickedX = x / scale;
+   clickedY = y / scale;
    updateGame();
 }
-
-defineGamePlay();
-definePath();
-drawToCvs();

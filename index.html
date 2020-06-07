@@ -14,61 +14,89 @@
       ></script>
    </head>
    <body>
-      <!-- 
       <div id="welcome" class="modal">
          <img src="img/logo.jpg" class="logo" />
          <h1>Ludo Game</h1>
          <div class="selection">
             <label for="numPlayers">Number of Players:</label><br />
-            <button class="iconBtn"><i class="fas fa-plus"></i></button>
+            <button class="iconBtn" id="incPlayers">
+               <i class="fas fa-plus"></i>
+            </button>
             <input type="number" value="4" id="numPlayers" /><i
                class="fas fa-user"
             ></i>
-            <button class="iconBtn"><i class="fas fa-minus"></i></button>
+            <button class="iconBtn" id="decPlayers">
+               <i class="fas fa-minus"></i>
+            </button>
          </div>
          <button id="simpleLudo" class="appBtn">Simple Ludo</button>
-         <button id="classLudo" class="appBtn">Classical Ludo</button>
+         <!--<button id="classLudo" class="appBtn">Classical Ludo</button>-->
       </div>
-      
+
       <div id="selectorColor" class="modal">
-         <img src="img/logo.jpg" class="logo" />
+         <div id="back">
+            <img src="img/logo.jpg" class="logo" />
+            <button id="backBtn" class="iconBtn">
+               <i class="fas fa-arrow-circle-left"></i>
+            </button>
+         </div>
          <h2>Select Colors</h2>
-         <label>Player 1</label>
-         <input type="text" class="name" value="Player1"/>
-         <select id="player1" name="cars">
-            <option value="red">Red</option>
-            <option value="green">Green</option>
-            <option value="yellow">Yellow</option>
-            <option value="blue">Blue</option>
-         </select>
-         <label>Player 2</label>
-         <input type="text" class="name" value="Player2" />
-         <select id="player2" name="player2">
-            <option value="green">Green</option>
-            <option value="red">Red</option>
-            <option value="yellow">Yellow</option>
-            <option value="blue">Blue</option>
-         </select>
-         <label>Player 3</label>
-         <input type="text" class="name"  value="Player3"/>
-         <select id="player3" name="player3">
-            <option value="yellow">Yellow</option>
-            <option value="red">Red</option>
-            <option value="green">Green</option>
-            <option value="blue">Blue</option>
-         </select>
-         <label>Player 4</label>
-         <input type="text" class="name"  value="Player4"/>
-         <select id="player4" name="player4">
-            <option value="blue">Blue</option>
-            <option value="red">Red</option>
-            <option value="green">Green</option>
-            <option value="yellow">Yellow</option>
-         </select>
+         <div class="orderselector">
+            <label>Player 1</label>
+            <input type="text" class="name" value="Player1" />
+            <select class="colorInput" id="player1" name="player1">
+               <option value="1">Red</option>
+               <option value="2">Green</option>
+               <option value="3">Yellow</option>
+               <option value="4">Blue</option>
+            </select>
+         </div>
+         <div class="orderselector">
+            <label>Player 2</label>
+            <input type="text" class="name" value="Player2" />
+            <select class="colorInput" id="player2" name="player2">
+               <option value="2">Green</option>
+               <option value="1">Red</option>
+               <option value="3">Yellow</option>
+               <option value="4">Blue</option>
+            </select>
+         </div>
+         <div class="orderselector">
+            <label>Player 3</label>
+            <input type="text" class="name" value="Player3" />
+            <select class="colorInput" id="player3" name="player3">
+               <option value="3">Yellow</option>
+               <option value="1">Red</option>
+               <option value="2">Green</option>
+               <option value="4">Blue</option>
+            </select>
+         </div>
+         <div class="orderselector">
+            <label>Player 4</label>
+            <input type="text" class="name" value="Player4" />
+            <select class="colorInput" id="player4" name="player4">
+               <option value="4">Blue</option>
+               <option value="1">Red</option>
+               <option value="2">Green</option>
+               <option value="3">Yellow</option>
+            </select>
+         </div>
+         <div class="selection">
+            <label for="numTokens" id="numTokenslabel">Number of Tokens:</label
+            ><br />
+            <button class="iconBtn" id="incTokens">
+               <i class="fas fa-plus"></i>
+            </button>
+            <input type="number" value="4" id="numTokens" /><i
+               class="far fa-dot-circle"
+            ></i>
+            <button class="iconBtn" id="decTokens">
+               <i class="fas fa-minus"></i>
+            </button>
+         </div>
 
          <button id="startGame" class="appBtn">Start Game</button>
       </div>
-   -->
 
       <div class="jccent aicent mainBox">
          <h1>Ludo Game</h1>
@@ -80,12 +108,11 @@
             checked
          />Roll
          <input type="number" id="inValue" value="6" />
-         <button id="header">Click me to roll the die.</button>
          <div id="canvasHolder">
             <canvas id="gameCanvas"></canvas>
 
             <div id="coverForDie"></div>
-            
+
             <div id="flexContforDie">
                <div id="dieHolder">
                   <div class="even" id="die">
@@ -175,6 +202,11 @@
          </div>
       </div>
 
+      <script>
+         window.onbeforeunload = function (event) {
+            return confirm("Are you sure? All the names nad the game dat will be lost.");
+         };
+      </script>
       <script src="scripts/index.js"></script>
       <script src="scripts/die.js"></script>
    </body>
