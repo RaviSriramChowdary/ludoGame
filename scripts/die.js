@@ -64,13 +64,15 @@ document.getElementById("testBtn").addEventListener(
          isThereAMove();
          if (!canMove) {
             setTimeout(function () {
-               situation.innerHTML +=
-                  names[whoseTurn] + " has no tokens to move. <br/>";
-               switchPlayer();
-               drawToCvs();
+               if (!onemovethereanditisdone) {
+                  situation.innerHTML =
+                     names[whoseTurn] + " has no tokens to move. <br/>";
+                  switchPlayer();
+                  drawToCvs();
+               }
             }, 3200);
             canRoll = true;
-         } 
+         }
          document.getElementById("coverForDie").style.display = "block";
          document.getElementById("testBtn").disabled = true;
          cvs.removeEventListener("click", touchPositionDetect, false);
@@ -88,10 +90,12 @@ document.getElementById("testBtn").addEventListener(
          if (!canMove) {
             rollDie();
             setTimeout(function () {
-               situation.innerHTML +=
-                  names[whoseTurn] + " has no tokens to move. <br/>";
-               switchPlayer();
-               drawToCvs();
+               if (!onemovethereanditisdone) {
+                  situation.innerHTML =
+                     names[whoseTurn] + " has no tokens to move. <br/>";
+                  switchPlayer();
+                  drawToCvs();
+               }
             }, 3200);
             document.getElementById("coverForDie").style.display = "block";
             document.getElementById("testBtn").disabled = true;
@@ -106,7 +110,7 @@ document.getElementById("testBtn").addEventListener(
                cvs.addEventListener("touchstart", touchPositionDetect, false);
             }, 3200);
             canRoll = true;
-         } 
+         }
       }
    },
    false
@@ -123,13 +127,15 @@ document.getElementById("dieHolder").addEventListener(
          isThereAMove();
          if (!canMove) {
             setTimeout(function () {
-               situation.innerHTML +=
-                  names[whoseTurn] + " has no tokens to move. <br/>";
-               switchPlayer();
-               drawToCvs();
+               if (!onemovethereanditisdone) {
+                  situation.innerHTML =
+                     names[whoseTurn] + " has no tokens to move. <br/>";
+                  switchPlayer();
+                  drawToCvs();
+               }
             }, 3200);
             canRoll = true;
-         } 
+         }
          document.getElementById("coverForDie").style.display = "block";
          document.getElementById("testBtn").disabled = true;
          cvs.removeEventListener("click", touchPositionDetect, false);
@@ -147,10 +153,12 @@ document.getElementById("dieHolder").addEventListener(
          if (!canMove) {
             rollDie();
             setTimeout(function () {
-               situation.innerHTML +=
-                  names[whoseTurn] + " has no tokens to move. <br/>";
-               switchPlayer();
-               drawToCvs();
+               if (!onemovethereanditisdone) {
+                  situation.innerHTML =
+                     names[whoseTurn] + " has no tokens to move. <br/>";
+                  switchPlayer();
+                  drawToCvs();
+               }
             }, 3200);
             document.getElementById("coverForDie").style.display = "block";
             document.getElementById("testBtn").disabled = true;
@@ -165,7 +173,7 @@ document.getElementById("dieHolder").addEventListener(
                cvs.addEventListener("touchstart", touchPositionDetect, false);
             }, 3200);
             canRoll = true;
-         } 
+         }
       }
    },
    false

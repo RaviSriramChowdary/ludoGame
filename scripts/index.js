@@ -50,6 +50,8 @@ canRoll = true;
 hasKilled = false;
 hasHomed = false;
 
+let possibleMoves = new Array();
+
 let whoseTurn;
 let dieValue = 0;
 
@@ -142,8 +144,6 @@ let lockers = [
 ];
 
 let lockWidth = cvs.width / 2 - 2 * unit;
-let star = new Image();
-star.src = "../img/star.png";
 
 const drawToCvs = () => {
    //Drawing the path
@@ -196,7 +196,7 @@ const drawToCvs = () => {
 
       ctx.font = "18px Arial";
       ctx.fillStyle = "black";
-      for (let j = 1; j < 4 + 1; j++) {
+      for (let j = 1; j <=4; j++) {
          if (pathSquares[i].numTokensPlayer[j] > 0) {
             if (pathSquares[i].isSafeSquare) {
                for (let l = 0; l < pathSquares[i].numTokensPlayer[j]; l++) {
@@ -233,7 +233,7 @@ const drawToCvs = () => {
             } else {
                for (let l = 0; l < pathSquares[i].numTokensPlayer[j]; l++) {
                   drawToken(
-                     gamePath[i].x + unit / 2,
+                     gamePath[i].x + unit / 2 + (l * unit) / 8,
                      gamePath[i].y + unit / 2,
                      colors[j],
                      1
@@ -639,19 +639,18 @@ document.getElementById("back").addEventListener("click", function () {
    document.getElementById("welcome").style.display = "block";
    document.getElementById("selectorColor").style.display = "none";
 });
+
 document.getElementById("backfromrules").addEventListener("click", function () {
    document.getElementById("welcome").style.display = "block";
    document.getElementById("rules").style.display = "none";
 });
 
 let hasalreadySwitched = false;
+let onemovethereanditisdone = false;
 
 function rollDie() {
-   situation.innerHTML = "";
-
-   // if (dieValue != 6 && !hasKilled && !hasHomed && !hasalreadySwitched) {
-   //    switchPlayer();
-   // }
+   situation.innerHTML = "Rolling...";
+   onemovethereanditisdone = false;
    hasRolled = true;
    hasalreadySwitched = false;
    canRoll = false;
@@ -659,13 +658,9 @@ function rollDie() {
    if (document.getElementById("rollorin").checked) dieValue = rand(1, 6);
    else dieValue = parseInt(document.getElementById("inValue").value);
    resetClicks();
-   // isThereAMove();
    isOnetokenPresent();
-   //console.log(
-   //    onlyOnemove.value + " Position Caught : " + onlyOnemove.positionCanBeMoved
-   // );
-   //console.log(possibleMoves);
    if (onlyOnemove.value == 1) {
+      onemovethereanditisdone = true;
       if (onlyOnemove.positionCanBeMoved != -1) {
          clickedX = pathSquares[onlyOnemove.positionCanBeMoved].x + unit / 2;
          clickedY = pathSquares[onlyOnemove.positionCanBeMoved].y + unit / 2;
@@ -673,7 +668,6 @@ function rollDie() {
          clickedX = lockers[whoseTurn].x + lockWidth / 2;
          clickedY = lockers[whoseTurn].y + lockWidth / 2;
       }
-      //console.log("recieved lisecnce for moving");
       setTimeout(function () {
          situation.innerHTML = names[whoseTurn] + ": Move automated <br/>";
          updateGame();
@@ -692,7 +686,6 @@ function rollDie() {
 }
 
 function switchPlayer() {
-   //console.log("Switching Player");
    if (whoseTurn == 0) {
       whoseTurn = gameOrder[0];
    } else
@@ -718,7 +711,6 @@ function updateGame() {
    //console.log("Came to the updating of game.");
    hasKilled = false;
    hasHomed = false;
-   canMove = false;
 
    //opening a token from locker:
 
@@ -1025,7 +1017,6 @@ function isThereAMove() {
    }
    isOnetokenPresent();
 }
-let possibleMoves = new Array();
 
 function isOnetokenPresent() {
    possibleMoves = new Array();
