@@ -8,11 +8,9 @@ html {
 }
 body {
    overflow: hidden;
-   background: linear-gradient(
-      to right bottom,
-      rgb(87, 167, 163),
-      rgb(0, 174, 255)
-   );
+   background-image: url(../img/bg.jpg);
+   background-size: cover;
+   background-position: center;
 }
 
 .flex {
@@ -44,6 +42,36 @@ body {
    top: 55%;
    left: 50%;
    transform: translate(-50%, -50%);
+}
+
+#presentsituation{
+   display: block;
+   text-align: center;
+   height: 60px;
+   line-height: 28px;
+   border: 2px solid black;
+   width: 90%;
+   max-width: 700px;
+   margin: 0 auto;
+}
+
+#testBtn{
+   display: inline-block;
+   background-color: rgba(255, 196, 0, 0.918);
+   border: 2px solid white;
+   line-height: 30px;
+   width: 150px;
+   font-size: 1.6rem;
+   color: rgb(121, 121, 121);
+}
+#testBtn:disabled{
+   display: inline-block;
+   background-color: rgba(148, 148, 148, 0.918);
+   border: 2px solid white;
+   line-height: 30px;
+   width: 150px;
+   font-size: 1.6rem;
+   color: black;
 }
 
 #gameCanvas {
@@ -128,11 +156,15 @@ body {
    position: fixed;
    top: 0;
    left: 0;
-   background: linear-gradient(
+   /* background: linear-gradient(
       to right bottom,
       rgb(87, 167, 163),
       rgb(0, 174, 255)
-   );
+   ); */
+   
+   background-image: url(../img/bg.jpg);
+   background-size: cover;
+   background-position: center;
    z-index: 40;
    text-align: center;
    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
@@ -163,12 +195,36 @@ body {
    background-color: #fff;
 }
 
+#scorecard .playagain{
+   display: inline-block;
+   background-color: orange;
+   border: 1px solid black;
+   line-height: 40px;
+   font-size : 1.2rem;
+   margin: 10px;
+   padding: 0px 15px;
+   border-radius: 5px;
+}
+
 #scorecard h1 {
    text-align: center;
 }
 
 #scorecard ol {
    list-style-position: inside;
+}
+
+#rules{
+   display: none;
+}
+
+#rules ul{
+   list-style-position: inside;
+   text-align: center;
+   display: block;
+   margin: 0 auto;
+   padding: 10px;
+   max-width: 700px;
 }
 
 #welcome .logo {
@@ -233,8 +289,22 @@ input[type="number"] {
    width: 200px;
    text-align: left;
 }
+#backfromrules {
+   display: flex;
+   width: 200px;
+   text-align: left;
+}
 
 #selectorColor img {
+   width: 50px;
+   text-align: left;
+   display: inline-block;
+   margin: 40px;
+   border-radius: 5px;
+   border: 1px solid black;
+}
+
+#rules img {
    width: 50px;
    text-align: left;
    display: inline-block;

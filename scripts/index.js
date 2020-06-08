@@ -9,22 +9,30 @@ window.addEventListener("resize", function () {
    if (document.body.offsetWidth < 724) {
       scale = document.body.offsetWidth / cvs.offsetWidth;
       cvsHolder.style.transform = "translate(-50%, -50%) scale(" + scale + ")";
+      document.getElementById("numberinput").style.paddingTop =
+         document.body.offsetHeight / 2 -
+         cvs.height * scale * 0.45 -
+         140 +
+         "px";
    } else if (document.body.offsetWidth >= 724) {
       scale = 1;
       cvsHolder.style.transform = "translate(-50%, -50%) scale(" + scale + ")";
+      document.getElementById("numberinput").style.paddingTop =
+         document.body.offsetHeight / 2 -
+         cvs.height * scale * 0.45 -
+         140 +
+         "px";
    }
-   document.getElementById("numberinput").style.paddingTop =
-      document.body.offsetHeight / 2 - cvs.height * scale * 0.45 - 80 + "px";
 });
 if (document.body.offsetWidth < 724) {
-   console.log("Hi");
    scale = document.body.offsetWidth / cvs.offsetWidth;
    cvsHolder.style.transform = "translate(-50%, -50%) scale(" + scale + ")";
    document.getElementById("numberinput").style.paddingTop =
-      document.body.offsetHeight / 2 - cvs.height * scale * 0.45 - 80 + "px";
+      document.body.offsetHeight / 2 - cvs.height * scale * 0.45 - 140 + "px";
 }
-document.getElementById("numberinput").style.paddingTop =
-   document.body.offsetHeight / 2 - cvs.height * scale * 0.45 - 80 + "px";
+
+// document.getElementById("numberinput").style.paddingTop =
+//    document.body.offsetHeight / 2 - cvs.height * scale * 0.45 - 80 + "px";
 
 cvsHolder.style.width = cvs.offsetWidth + "px";
 
@@ -49,6 +57,7 @@ let numPlayers;
 let gameOrder;
 // gameOrder = [1, 4];
 let numTokens;
+let situation = document.getElementById("presentsituation");
 
 let names;
 
@@ -138,8 +147,7 @@ star.src = "../img/star.png";
 
 const drawToCvs = () => {
    //Drawing the path
-   ctx.fillStyle = "white";
-   ctx.fillRect(0, 0, cvs.width, cvs.height);
+   ctx.clearRect(0, 0, cvs.width, cvs.height);
 
    ctx.strokeStyle = "black";
 
@@ -154,8 +162,15 @@ const drawToCvs = () => {
       if (i == 3 * numSquares - 3) ctx.fillStyle = "#0EABDE";
       if (i == 3 * numSquares - 4) ctx.fillStyle = "#9fe4f9";
       ctx.fillRect(gamePath[i].x, gamePath[i].y, unit, unit);
-      // if (pathSquares[i].isSafeSquare)
-         // ctx.drawImage(star, gamePath[i].x + 8, gamePath[i].y + 8, unit - 16, unit - 16);
+      if (pathSquares[i].isSafeSquare) {
+         ctx.beginPath();
+         ctx.moveTo(gamePath[i].x + unit / 2, gamePath[i].y + unit / 4);
+         ctx.lineTo(gamePath[i].x + (3 * unit) / 4, gamePath[i].y + unit / 2);
+         ctx.lineTo(gamePath[i].x + unit / 2, gamePath[i].y + (3 * unit) / 4);
+         ctx.lineTo(gamePath[i].x + unit / 4, gamePath[i].y + unit / 2);
+         ctx.lineTo(gamePath[i].x + unit / 2, gamePath[i].y + unit / 4);
+         ctx.stroke();
+      }
       ctx.strokeStyle = "#00000010";
       ctx.lineWidth = unit / 8;
       let x = ctx.lineWidth;
@@ -494,7 +509,7 @@ const resetClicks = () => {
    clickedY = -10;
 };
 
-const rand = (min, max) => min + Math.floor(Math.random() * (max - min + 0.7));
+const rand = (min, max) => min + Math.floor(Math.random() * (max - min + 0.9));
 
 document.getElementById("incPlayers").addEventListener("click", function () {
    numPlayers = parseInt(document.getElementById("numPlayers").value);
@@ -524,6 +539,10 @@ document.getElementById("decTokens").addEventListener("click", function () {
          parseInt(document.getElementById("numTokens").value) - 1;
 });
 
+document.getElementById("rulesbtn").addEventListener("click", function () {
+   document.getElementById("welcome").style.display = "none";
+   document.getElementById("rules").style.display = "block";
+});
 document.getElementById("simpleLudo").addEventListener("click", function () {
    document.getElementById("welcome").style.display = "none";
    document.getElementById("selectorColor").style.display = "block";
@@ -599,13 +618,14 @@ document.getElementById("startGame").addEventListener("click", function () {
       ] = document.getElementsByClassName("name")[i].value;
    }
    gameOrder.sort();
-   console.log(gameOrder);
+   //console.log(gameOrder);
    whoseTurn = gameOrder[0];
    document.getElementById("dieHolder").style.backgroundColor =
       colors[whoseTurn] + "aa";
    document.getElementById("selectorColor").style.display = "none";
    numTokens = parseInt(document.getElementById("numTokens").value);
    gamePlay = new Array(numPlayers + 1);
+   situation.innerHTML = names[gameOrder[0]] + " has to roll the die.<br/>";
    defineGamePlay();
    definePath();
    drawToCvs();
@@ -619,10 +639,16 @@ document.getElementById("back").addEventListener("click", function () {
    document.getElementById("welcome").style.display = "block";
    document.getElementById("selectorColor").style.display = "none";
 });
+document.getElementById("backfromrules").addEventListener("click", function () {
+   document.getElementById("welcome").style.display = "block";
+   document.getElementById("rules").style.display = "none";
+});
 
 let hasalreadySwitched = false;
 
 function rollDie() {
+   situation.innerHTML = "";
+
    // if (dieValue != 6 && !hasKilled && !hasHomed && !hasalreadySwitched) {
    //    switchPlayer();
    // }
@@ -633,7 +659,12 @@ function rollDie() {
    if (document.getElementById("rollorin").checked) dieValue = rand(1, 6);
    else dieValue = parseInt(document.getElementById("inValue").value);
    resetClicks();
+   // isThereAMove();
    isOnetokenPresent();
+   //console.log(
+   //    onlyOnemove.value + " Position Caught : " + onlyOnemove.positionCanBeMoved
+   // );
+   //console.log(possibleMoves);
    if (onlyOnemove.value == 1) {
       if (onlyOnemove.positionCanBeMoved != -1) {
          clickedX = pathSquares[onlyOnemove.positionCanBeMoved].x + unit / 2;
@@ -642,17 +673,26 @@ function rollDie() {
          clickedX = lockers[whoseTurn].x + lockWidth / 2;
          clickedY = lockers[whoseTurn].y + lockWidth / 2;
       }
+      //console.log("recieved lisecnce for moving");
       setTimeout(function () {
+         situation.innerHTML = names[whoseTurn] + ": Move automated <br/>";
          updateGame();
+      }, 3200);
+   } else {
+      setTimeout(function () {
+         isThereAMove();
+         if (canMove)
+            situation.innerHTML =
+               names[whoseTurn] + ": has to move their token. <br/>";
       }, 3200);
    }
    setTimeout(function () {
       drawToCvs();
-   }, dieValue * 150);
+   }, 3200 + (dieValue + 1) * 150);
 }
 
 function switchPlayer() {
-   console.log("Switching: Initial Player : " + whoseTurn);
+   //console.log("Switching Player");
    if (whoseTurn == 0) {
       whoseTurn = gameOrder[0];
    } else
@@ -670,11 +710,12 @@ function switchPlayer() {
 
    document.getElementById("dieHolder").style.backgroundColor =
       colors[whoseTurn] + "70";
-   console.log("Switching Completed: Final Player : " + whoseTurn);
    hasRolled = false;
+   situation.innerHTML += names[whoseTurn] + ": has to roll the die. <br/>";
 }
 
 function updateGame() {
+   //console.log("Came to the updating of game.");
    hasKilled = false;
    hasHomed = false;
    canMove = false;
@@ -697,7 +738,10 @@ function updateGame() {
       pathSquares[scaleNum(0, whoseTurn)].numTokensPlayer[whoseTurn]++;
       hasMoved = true;
       canRoll = true;
+      //console.log("Freed the token.");
+      situation.innerHTML = names[whoseTurn] + ": has to roll the die. <br/>";
    }
+
    trackTokens();
    drawToCvs();
 
@@ -735,6 +779,7 @@ function updateGame() {
                !pathSquares[temp + dieValue].isSafeSquare
             ) {
                setTimeout(function () {
+                  "Came to the killing time out section.";
                   gamePlay[m].numTokenInLocker +=
                      pathSquares[temp + dieValue].numTokensPlayer[m];
                   pathSquares[temp + dieValue].numTokensPlayer[m] = 0;
@@ -754,16 +799,100 @@ function updateGame() {
 
          //if they reach thier home place they score
          let g = -1;
-
+         let m = -1;
          if (temp + dieValue == scaleNum(pathLength - 1, whoseTurn)) {
-            score[whoseTurn]++;
-            hasHomed = true;
+            m = 0;
+            let scoregame = setInterval(function () {
+               //console.log("Going to the success.");
+               if (temp + m < 0)
+                  pathSquares[temp + gamePath.length + g].numTokensPlayer[
+                     whoseTurn
+                  ]--;
+               else {
+                  pathSquares[temp + m].numTokensPlayer[whoseTurn]--;
+               }
+               if (temp + m + 1 < 0)
+                  pathSquares[temp + gamePath.length + m + 1].numTokensPlayer[
+                     whoseTurn
+                  ]++;
+               else {
+                  pathSquares[temp + m + 1].numTokensPlayer[whoseTurn]++;
+               }
+               if (dieValue == m + 1) {
+                  pathSquares[temp + m + 1].numTokensPlayer[whoseTurn]--;
+                  score[whoseTurn]++;
+                  hasHomed = true;
+                  clearInterval(scoregame);
+                  hasMoved = true;
+                  canRoll = true;
+                  isThereAMove();
+                  if (score[whoseTurn] == numTokens) {
+                     winOrder.push(whoseTurn);
+                     let place;
+                     gameOrder.forEach((value, index) => {
+                        if (value == whoseTurn) {
+                           place = index;
+                        }
+                     });
+                     situation.innerHTML +=
+                        names[whoseTurn] +
+                        " has won position " +
+                        winOrder.length;
+                     switchPlayer();
+                     gameOrder.splice(place, 1);
+                     numPlayers--;
+                     hasalreadySwitched = true;
+
+                     if (numPlayers <= 1) {
+                        winOrder.push(whoseTurn);
+                        document.getElementById("scorecard").innerHTML =
+                           "<h1>Score Card</h1>" + "<ul>";
+                        for (let i = 0; i < winOrder.length; i++) {
+                           document.getElementById("scorecard").innerHTML +=
+                              "<li>" +
+                              "Position " +
+                              (i + 1) +
+                              ".&emsp;" +
+                              names[winOrder[i]] +
+                              "</li>";
+                           if (i == winOrder.length - 1)
+                              document.getElementById("scorecard").innerHTML +=
+                                 "</ul>" +
+                                 "<button class='playagain' id='playagain'>Play Again</button>";
+                        }
+                        document.getElementById("scorebackdrop").style.display =
+                           "flex";
+                        document
+                           .getElementById("playagain")
+                           .addEventListener("click", function () {
+                              location.reload();
+                           });
+                     }
+                  }
+               }
+               m++;
+               trackTokens();
+               drawToCvs();
+            }, 150);
          } else {
             g = 0;
             // pathSquares[temp + dieValue].numTokensPlayer[whoseTurn]++;
             let game = setInterval(function () {
-               pathSquares[temp + g].numTokensPlayer[whoseTurn]--;
-               pathSquares[temp + g + 1].numTokensPlayer[whoseTurn]++;
+               //console.log("On the way to the nest position.");
+               if (temp + g < 0)
+                  pathSquares[temp + gamePath.length + g].numTokensPlayer[
+                     whoseTurn
+                  ]--;
+               else {
+                  pathSquares[temp + g].numTokensPlayer[whoseTurn]--;
+               }
+               if (temp + g + 1 < 0)
+                  pathSquares[temp + gamePath.length + g + 1].numTokensPlayer[
+                     whoseTurn
+                  ]++;
+               else {
+                  pathSquares[temp + g + 1].numTokensPlayer[whoseTurn]++;
+               }
                trackTokens();
                drawToCvs();
                if (dieValue == g + 1) {
@@ -779,6 +908,10 @@ function updateGame() {
                            place = index;
                         }
                      });
+                     situation.innerHTML +=
+                        names[whoseTurn] +
+                        " has won position " +
+                        winOrder.length;
                      switchPlayer();
                      gameOrder.splice(place, 1);
                      numPlayers--;
@@ -787,81 +920,48 @@ function updateGame() {
                      if (numPlayers <= 1) {
                         winOrder.push(whoseTurn);
                         document.getElementById("scorecard").innerHTML =
-                           "<h1>Score Card</h1>" + "<ol>";
+                           "<h1>Score Card</h1>" + "<ul>";
                         for (let i = 0; i < winOrder.length; i++) {
-                           console.log(names[winOrder[i]]);
+                           //console.log(names[winOrder[i]]);
                            document.getElementById("scorecard").innerHTML +=
-                              "<li>" + names[winOrder[i]] + "</li>";
+                              "<li>" +
+                              "Position " +
+                              (i + 1) +
+                              ".&emsp;" +
+                              names[winOrder[i]] +
+                              "</li>";
+                           if (i == winOrder.length - 1)
+                              document.getElementById("scorecard").innerHTML +=
+                                 "</ul>" +
+                                 "<button class='playagain' id='playagain'>Play Again</button>";
                         }
-                        document.getElementById("scorecard").innerHTML +=
-                           "</ol>";
                         document.getElementById("scorebackdrop").style.display =
                            "flex";
+                        document
+                           .getElementById("playagain")
+                           .addEventListener("click", function () {
+                              location.reload();
+                           });
                      }
                   } else if (
-                     ((hasMoved || !canMove) &&
-                        !hasKilled &&
-                        !hasHomed &&
-                        dieValue != 6 &&
-                        !hasalreadySwitched) ||
-                     !canMove
+                     (hasMoved || !canMove) &&
+                     !hasKilled &&
+                     !hasHomed &&
+                     dieValue != 6 &&
+                     !hasalreadySwitched
                   ) {
                      switchPlayer();
                      hasalreadySwitched = true;
+                  } else {
+                     situation.innerHTML =
+                        names[whoseTurn] + ": has to roll the die. <br/>";
                   }
                   trackTokens();
                   drawToCvs();
                }
 
                g++;
-               console.log("Writing");
             }, 150);
-         }
-
-         if (g == -1) {
-            pathSquares[i].numTokensPlayer[whoseTurn]--;
-            hasMoved = true;
-            canRoll = true;
-            isThereAMove();
-            if (score[whoseTurn] == numTokens) {
-               winOrder.push(whoseTurn);
-               let place;
-               gameOrder.forEach((value, index) => {
-                  if (value == whoseTurn) {
-                     place = index;
-                  }
-               });
-               switchPlayer();
-               gameOrder.splice(place, 1);
-               numPlayers--;
-               hasalreadySwitched = true;
-
-               if (numPlayers <= 1) {
-                  winOrder.push(whoseTurn);
-                  document.getElementById("scorecard").innerHTML =
-                     "<h1>Score Card</h1>" + "<ol>";
-                  for (let i = 0; i < winOrder.length; i++) {
-                     console.log(names[winOrder[i]]);
-                     document.getElementById("scorecard").innerHTML +=
-                        "<li>" + names[winOrder[i]] + "</li>";
-                  }
-                  document.getElementById("scorecard").innerHTML += "</ol>";
-                  document.getElementById("scorebackdrop").style.display =
-                     "flex";
-               }
-            } else if (
-               ((hasMoved || !canMove) &&
-                  !hasKilled &&
-                  !hasHomed &&
-                  dieValue != 6 &&
-                  !hasalreadySwitched) ||
-               !canMove
-            ) {
-               switchPlayer();
-               hasalreadySwitched = true;
-            }
-            trackTokens();
-            drawToCvs();
          }
       }
    }
@@ -925,9 +1025,10 @@ function isThereAMove() {
    }
    isOnetokenPresent();
 }
+let possibleMoves = new Array();
 
 function isOnetokenPresent() {
-   let possibleMoves = new Array();
+   possibleMoves = new Array();
    // re setting the onlyOnemove variable
    onlyOnemove.value = 0;
    onlyOnemove.positionCanBeMoved = null;
@@ -994,11 +1095,6 @@ function isOnetokenPresent() {
          }
       }
    }
-
-   console.log(
-      onlyOnemove.value + " Position Caught : " + onlyOnemove.positionCanBeMoved
-   );
-   console.log(possibleMoves);
 }
 
 const hasClickedon = (x, y, w, h) =>
@@ -1009,7 +1105,7 @@ cvs.addEventListener("touchstart", touchPositionDetect, false);
 
 function touchPositionDetect(event) {
    let rect = cvs.getBoundingClientRect();
-   console.log("Client X: " + event.clientX + "Client Y: " + event.clientY);
+   //console.log("Client X: " + event.clientX + "Client Y: " + event.clientY);
    let x = event.clientX - rect.left;
    let y = event.clientY - rect.top;
    clickedX = x / scale;

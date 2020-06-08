@@ -29,8 +29,8 @@
                <i class="fas fa-minus"></i>
             </button>
          </div>
-         <button id="simpleLudo" class="appBtn">Simple Ludo</button>
-         <!--<button id="classLudo" class="appBtn">Classical Ludo</button>-->
+         <button id="simpleLudo" class="appBtn">Start Game</button>
+         <button id="rulesbtn" class="appBtn">Rules and Features</button>
       </div>
 
       <div id="selectorColor" class="modal">
@@ -98,6 +98,46 @@
          <button id="startGame" class="appBtn">Start Game</button>
       </div>
 
+      <div id="rules" class="modal">
+         <div id="backfromrules">
+            <img src="img/logo.jpg" class="logo" />
+            <button id="backBtnfromrules" class="iconBtn">
+               <i class="fas fa-arrow-circle-left"></i>
+            </button>
+         </div>
+         <h2>Rules and Features</h2>
+         <ul>
+            <li>
+               This is a game that can be played by 2 to 4 players with each 2
+               to 4 tokens and this can be set manually.
+            </li>
+            <li>
+               You can enter you name sna dthis will be dispalyed in the game
+               board as well as in the final score card that appears at the end
+               of the game
+            </li>
+            <li>
+               A player has to roll 6 to free the token.
+            </li>
+            <li>
+               If only one move is possible for a player then the move is
+               automated.
+            </li>
+            <li>
+               In a square more than one token cannot be kept unless it is a safe square which are repesented by stars.
+            </li>
+            <li>
+               <strong
+                  ><em>
+                     Finally Wait for the score card that appears at the end of
+                     the game.
+                  </em></strong
+               >
+            </li>
+            <h3>Happy Gaming</h3>
+         </ul>
+      </div>
+
       <div class="jccent aicent mainBox">
          <div id="numberinput">
             <button id="restart">Exit</button>
@@ -111,9 +151,11 @@
             <label for="rollorin">
                <div class="slidebar"><div class="slider"></div></div>
             </label>
-               Enter Value in this box: 
+            Enter Value in this box:
             <input type="number" id="inValue" value="6" />
+            <button id="testBtn">Test</button>
          </div>
+         <div id="presentsituation"></div>
          <div id="canvasHolder">
             <canvas id="gameCanvas"></canvas>
 
@@ -210,7 +252,6 @@
 
       <div id="scorebackdrop">
          <div id="scorecard">
-
             <h1>Score Card</h1>
             <ol>
                <li>Sriram</li>

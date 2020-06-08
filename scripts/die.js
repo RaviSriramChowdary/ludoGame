@@ -1,4 +1,4 @@
-// function rollDice() {   
+// function rollDice() {
 //    let dice = document.getElementById("frd");
 //    rollDie();
 //    rollNum = dieValue;
@@ -52,9 +52,11 @@ function getRandomNumber(min, max) {
    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-document.getElementById("dieHolder").addEventListener(
+document.getElementById("testBtn").addEventListener(
    "click",
+
    function () {
+      document.getElementById("rollorin").checked = false;
       let dice = document.getElementById("frd");
       if (whoseTurn != 0) isThereAMove();
       if (canRoll) {
@@ -62,33 +64,108 @@ document.getElementById("dieHolder").addEventListener(
          isThereAMove();
          if (!canMove) {
             setTimeout(function () {
+               situation.innerHTML +=
+                  names[whoseTurn] + " has no tokens to move. <br/>";
                switchPlayer();
                drawToCvs();
             }, 3200);
             canRoll = true;
-         }  
+         } 
          document.getElementById("coverForDie").style.display = "block";
+         document.getElementById("testBtn").disabled = true;
+         cvs.removeEventListener("click", touchPositionDetect, false);
+         cvs.removeEventListener("touchstart", touchPositionDetect, false);
          rollNum = dieValue;
          toggleClasses(dice);
          setTimeout(function () {
             document.getElementById("coverForDie").style.display = "none";
+            document.getElementById("testBtn").disabled = false;
+            cvs.addEventListener("click", touchPositionDetect, false);
+            cvs.addEventListener("touchstart", touchPositionDetect, false);
          }, 3200);
       } else {
          isThereAMove();
          if (!canMove) {
             rollDie();
             setTimeout(function () {
+               situation.innerHTML +=
+                  names[whoseTurn] + " has no tokens to move. <br/>";
                switchPlayer();
                drawToCvs();
             }, 3200);
             document.getElementById("coverForDie").style.display = "block";
+            document.getElementById("testBtn").disabled = true;
+            cvs.removeEventListener("click", touchPositionDetect, false);
+            cvs.removeEventListener("touchstart", touchPositionDetect, false);
             rollNum = dieValue;
             toggleClasses(dice);
             setTimeout(function () {
                document.getElementById("coverForDie").style.display = "none";
+               document.getElementById("testBtn").disabled = false;
+               cvs.addEventListener("click", touchPositionDetect, false);
+               cvs.addEventListener("touchstart", touchPositionDetect, false);
             }, 3200);
             canRoll = true;
-         }
+         } 
+      }
+   },
+   false
+);
+
+document.getElementById("dieHolder").addEventListener(
+   "click",
+   function () {
+      document.getElementById("rollorin").checked = true;
+      let dice = document.getElementById("frd");
+      if (whoseTurn != 0) isThereAMove();
+      if (canRoll) {
+         rollDie();
+         isThereAMove();
+         if (!canMove) {
+            setTimeout(function () {
+               situation.innerHTML +=
+                  names[whoseTurn] + " has no tokens to move. <br/>";
+               switchPlayer();
+               drawToCvs();
+            }, 3200);
+            canRoll = true;
+         } 
+         document.getElementById("coverForDie").style.display = "block";
+         document.getElementById("testBtn").disabled = true;
+         cvs.removeEventListener("click", touchPositionDetect, false);
+         cvs.removeEventListener("touchstart", touchPositionDetect, false);
+         rollNum = dieValue;
+         toggleClasses(dice);
+         setTimeout(function () {
+            document.getElementById("coverForDie").style.display = "none";
+            document.getElementById("testBtn").disabled = false;
+            cvs.addEventListener("click", touchPositionDetect, false);
+            cvs.addEventListener("touchstart", touchPositionDetect, false);
+         }, 3200);
+      } else {
+         isThereAMove();
+         if (!canMove) {
+            rollDie();
+            setTimeout(function () {
+               situation.innerHTML +=
+                  names[whoseTurn] + " has no tokens to move. <br/>";
+               switchPlayer();
+               drawToCvs();
+            }, 3200);
+            document.getElementById("coverForDie").style.display = "block";
+            document.getElementById("testBtn").disabled = true;
+            cvs.removeEventListener("click", touchPositionDetect, false);
+            cvs.removeEventListener("touchstart", touchPositionDetect, false);
+            rollNum = dieValue;
+            toggleClasses(dice);
+            setTimeout(function () {
+               document.getElementById("coverForDie").style.display = "none";
+               document.getElementById("testBtn").disabled = false;
+               cvs.addEventListener("click", touchPositionDetect, false);
+               cvs.addEventListener("touchstart", touchPositionDetect, false);
+            }, 3200);
+            canRoll = true;
+         } 
       }
    },
    false
