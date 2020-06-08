@@ -70,7 +70,7 @@ let situation = document.getElementById("presentsituation");
 
 let names;
 
-let numSquares = 6;
+let numSquares = 15;
 let pathLength = 4 * numSquares - 4;
 
 let gamePlay;
