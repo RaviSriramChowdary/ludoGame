@@ -36,6 +36,13 @@ if (document.body.offsetWidth < 724) {
 
 cvsHolder.style.width = cvs.offsetWidth + "px";
 
+let movesound = new Audio();
+movesound.src = "../audio/move.mp3";
+let scoresound = new Audio();
+scoresound.src = "../audio/score.m4a";
+let killsound = new Audio();
+killsound.src = "../audio/kill.mp3";
+
 let hasRolled,
    hasMoved,
    canRoll,
@@ -63,7 +70,7 @@ let situation = document.getElementById("presentsituation");
 
 let names;
 
-let numSquares = 15;
+let numSquares = 6;
 let pathLength = 4 * numSquares - 4;
 
 let gamePlay;
@@ -544,6 +551,7 @@ document.getElementById("rulesbtn").addEventListener("click", function () {
    document.getElementById("rules").style.display = "block";
 });
 document.getElementById("simpleLudo").addEventListener("click", function () {
+   scoresound.play();
    document.getElementById("welcome").style.display = "none";
    document.getElementById("selectorColor").style.display = "block";
    numPlayers = parseInt(document.getElementById("numPlayers").value);
@@ -580,6 +588,7 @@ document.getElementById("player1").addEventListener("change", function (e) {
 });
 
 document.getElementById("startGame").addEventListener("click", function () {
+   scoresound.play();
    names = new Array(5);
    gameOrder = new Array();
    let errorCounter = 0;
@@ -730,6 +739,7 @@ function updateGame() {
       pathSquares[scaleNum(0, whoseTurn)].numTokensPlayer[whoseTurn]++;
       hasMoved = true;
       canRoll = true;
+      scoresound.play();
       //console.log("Freed the token.");
       situation.innerHTML = names[whoseTurn] + ": has to roll the die. <br/>";
    }
@@ -765,8 +775,9 @@ function updateGame() {
          let counter = 0;
 
          for (let m = 1; m <= 4; m++) {
+            let turntemp = whoseTurn;
             if (
-               m != whoseTurn &&
+               m != turntemp &&
                pathSquares[temp + dieValue].numTokensPlayer[m] > 0 &&
                !pathSquares[temp + dieValue].isSafeSquare
             ) {
@@ -776,10 +787,11 @@ function updateGame() {
                      pathSquares[temp + dieValue].numTokensPlayer[m];
                   pathSquares[temp + dieValue].numTokensPlayer[m] = 0;
                   hasKilled = true;
-               }, dieValue * 150);
+                  killsound.play();
+               }, dieValue * 150 - 20);
             }
-            if (
-               m == whoseTurn &&
+            else if (
+               m == turntemp &&
                pathSquares[temp + dieValue].numTokensPlayer[m] > 0 &&
                !pathSquares[temp + dieValue].isSafeSquare
             ) {
@@ -787,39 +799,41 @@ function updateGame() {
             }
          }
 
-         if (counter > 0) break;
+         if (counter > 0) return 0;
 
          //if they reach thier home place they score
          let g = -1;
          let m = -1;
          if (temp + dieValue == scaleNum(pathLength - 1, whoseTurn)) {
             m = 0;
+            let turntemp = whoseTurn;
             let scoregame = setInterval(function () {
+               movesound.play();
                //console.log("Going to the success.");
                if (temp + m < 0)
                   pathSquares[temp + gamePath.length + g].numTokensPlayer[
-                     whoseTurn
+                     turntemp
                   ]--;
                else {
-                  pathSquares[temp + m].numTokensPlayer[whoseTurn]--;
+                  pathSquares[temp + m].numTokensPlayer[turntemp]--;
                }
                if (temp + m + 1 < 0)
                   pathSquares[temp + gamePath.length + m + 1].numTokensPlayer[
-                     whoseTurn
+                     turntemp
                   ]++;
                else {
-                  pathSquares[temp + m + 1].numTokensPlayer[whoseTurn]++;
+                  pathSquares[temp + m + 1].numTokensPlayer[turntemp]++;
                }
                if (dieValue == m + 1) {
-                  pathSquares[temp + m + 1].numTokensPlayer[whoseTurn]--;
-                  score[whoseTurn]++;
+                  pathSquares[temp + m + 1].numTokensPlayer[turntemp]--;
+                  score[turntemp]++;
+                  scoresound.play();
                   hasHomed = true;
-                  clearInterval(scoregame);
                   hasMoved = true;
                   canRoll = true;
                   isThereAMove();
-                  if (score[whoseTurn] == numTokens) {
-                     winOrder.push(whoseTurn);
+                  if (score[turntemp] == numTokens) {
+                     winOrder.push(turntemp);
                      let place;
                      gameOrder.forEach((value, index) => {
                         if (value == whoseTurn) {
@@ -827,7 +841,7 @@ function updateGame() {
                         }
                      });
                      situation.innerHTML +=
-                        names[whoseTurn] +
+                        names[turntemp] +
                         " has won position " +
                         winOrder.length;
                      switchPlayer();
@@ -861,6 +875,7 @@ function updateGame() {
                            });
                      }
                   }
+                  clearInterval(scoregame);
                }
                m++;
                trackTokens();
@@ -869,39 +884,40 @@ function updateGame() {
          } else {
             g = 0;
             // pathSquares[temp + dieValue].numTokensPlayer[whoseTurn]++;
+            let turntemp = whoseTurn;
             let game = setInterval(function () {
+               movesound.play();
                //console.log("On the way to the nest position.");
                if (temp + g < 0)
                   pathSquares[temp + gamePath.length + g].numTokensPlayer[
-                     whoseTurn
+                     turntemp
                   ]--;
                else {
-                  pathSquares[temp + g].numTokensPlayer[whoseTurn]--;
+                  pathSquares[temp + g].numTokensPlayer[turntemp]--;
                }
                if (temp + g + 1 < 0)
                   pathSquares[temp + gamePath.length + g + 1].numTokensPlayer[
-                     whoseTurn
+                     turntemp
                   ]++;
                else {
-                  pathSquares[temp + g + 1].numTokensPlayer[whoseTurn]++;
+                  pathSquares[temp + g + 1].numTokensPlayer[turntemp]++;
                }
                trackTokens();
                drawToCvs();
                if (dieValue == g + 1) {
-                  clearInterval(game);
                   hasMoved = true;
                   canRoll = true;
                   isThereAMove();
-                  if (score[whoseTurn] == numTokens) {
-                     winOrder.push(whoseTurn);
+                  if (score[turntemp] == numTokens) {
+                     winOrder.push(turntemp);
                      let place;
                      gameOrder.forEach((value, index) => {
-                        if (value == whoseTurn) {
+                        if (value == turntemp) {
                            place = index;
                         }
                      });
                      situation.innerHTML +=
-                        names[whoseTurn] +
+                        names[turntemp] +
                         " has won position " +
                         winOrder.length;
                      switchPlayer();
@@ -950,6 +966,7 @@ function updateGame() {
                   }
                   trackTokens();
                   drawToCvs();
+                  clearInterval(game);
                }
 
                g++;

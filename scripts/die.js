@@ -60,6 +60,7 @@ document.getElementById("testBtn").addEventListener(
       let dice = document.getElementById("frd");
       if (whoseTurn != 0) isThereAMove();
       if (canRoll) {
+         dierollsound.play();
          rollDie();
          isThereAMove();
          if (!canMove) {
@@ -88,6 +89,7 @@ document.getElementById("testBtn").addEventListener(
       } else {
          isThereAMove();
          if (!canMove) {
+      dierollsound.play();
             rollDie();
             setTimeout(function () {
                if (!onemovethereanditisdone) {
@@ -116,13 +118,18 @@ document.getElementById("testBtn").addEventListener(
    false
 );
 
+let dierollsound = new Audio();
+dierollsound.src = "../audio/dieroll.mp3";
+
 document.getElementById("dieHolder").addEventListener(
    "click",
    function () {
+      dierollsound.play();
       document.getElementById("rollorin").checked = true;
       let dice = document.getElementById("frd");
       if (whoseTurn != 0) isThereAMove();
       if (canRoll) {
+      dierollsound.play();
          rollDie();
          isThereAMove();
          if (!canMove) {
@@ -151,6 +158,7 @@ document.getElementById("dieHolder").addEventListener(
       } else {
          isThereAMove();
          if (!canMove) {
+      dierollsound.play();
             rollDie();
             setTimeout(function () {
                if (!onemovethereanditisdone) {
