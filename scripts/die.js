@@ -119,7 +119,8 @@ document.getElementById("testBtn").addEventListener(
 );
 
 let dierollsound = new Audio();
-dierollsound.src = "../audio/dieroll.mp3";
+dierollsound.src =
+   "https://ravisriramchowdary.github.io/ludoGame/audio/dieroll.mp3";
 
 document.getElementById("dieHolder").addEventListener(
    "click",
