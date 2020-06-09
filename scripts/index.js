@@ -37,11 +37,12 @@ if (document.body.offsetWidth < 724) {
 cvsHolder.style.width = cvs.offsetWidth + "px";
 
 let movesound = new Audio();
-movesound.src = "../audio/move.mp3";
+movesound.src = "https://ravisriramchowdary.github.io/ludoGame/audio/move.mp3";
 let scoresound = new Audio();
-scoresound.src = "../audio/score.m4a";
+scoresound.src =
+   "https://ravisriramchowdary.github.io/ludoGame/audio/score.m4a";
 let killsound = new Audio();
-killsound.src = "../audio/kill.mp3";
+killsound.src = "https://ravisriramchowdary.github.io/ludoGame/audio/kill.mp3";
 
 let hasRolled,
    hasMoved,
@@ -588,7 +589,7 @@ document.getElementById("player1").addEventListener("change", function (e) {
 });
 
 document.getElementById("startGame").addEventListener("click", function () {
-   scoresound.play();
+   
    names = new Array(5);
    gameOrder = new Array();
    let errorCounter = 0;
@@ -635,6 +636,7 @@ document.getElementById("startGame").addEventListener("click", function () {
    numTokens = parseInt(document.getElementById("numTokens").value);
    gamePlay = new Array(numPlayers + 1);
    situation.innerHTML = names[gameOrder[0]] + " has to roll the die.<br/>";
+   scoresound.play();
    defineGamePlay();
    definePath();
    drawToCvs();
