@@ -204,7 +204,7 @@ const drawToCvs = () => {
 
       ctx.font = "18px Arial";
       ctx.fillStyle = "black";
-      for (let j = 1; j <=4; j++) {
+      for (let j = 1; j <= 4; j++) {
          if (pathSquares[i].numTokensPlayer[j] > 0) {
             if (pathSquares[i].isSafeSquare) {
                for (let l = 0; l < pathSquares[i].numTokensPlayer[j]; l++) {
@@ -589,7 +589,6 @@ document.getElementById("player1").addEventListener("change", function (e) {
 });
 
 document.getElementById("startGame").addEventListener("click", function () {
-   
    names = new Array(5);
    gameOrder = new Array();
    let errorCounter = 0;
@@ -791,8 +790,7 @@ function updateGame() {
                   hasKilled = true;
                   killsound.play();
                }, dieValue * 150 - 20);
-            }
-            else if (
+            } else if (
                m == turntemp &&
                pathSquares[temp + dieValue].numTokensPlayer[m] > 0 &&
                !pathSquares[temp + dieValue].isSafeSquare
@@ -1118,7 +1116,9 @@ function touchPositionDetect(event) {
    //console.log("Client X: " + event.clientX + "Client Y: " + event.clientY);
    let x = event.clientX - rect.left;
    let y = event.clientY - rect.top;
-   clickedX = x / scale;
-   clickedY = y / scale;
-   updateGame();
+   if (!onemovethereanditisdone) {
+      clickedX = x / scale;
+      clickedY = y / scale;
+      updateGame();
+   }
 }
